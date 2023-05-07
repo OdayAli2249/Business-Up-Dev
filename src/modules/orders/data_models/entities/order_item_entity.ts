@@ -44,6 +44,12 @@ export class OrderItemEntity extends BaseEntity {
         return new Promise(async (resolve, _) => {
 
             // TO DO : add more conditions for more includes
+            let resourceEntity: ProductEntity | ServiceEntity;
+            if (orderItem.serviceId)
+                resourceEntity = await ServiceEntity.buildFromModel(await orderItem.getService(), includes);
+            else
+                resourceEntity = await ProductEntity.buildFromModel(await orderItem.getProduct(), includes);
+
 
             let orderItemEntity: OrderItemEntity = new OrderItemEntity(
                 orderItem.id,
@@ -53,9 +59,9 @@ export class OrderItemEntity extends BaseEntity {
                 orderItem.orderId,
                 null,
                 orderItem.productId,
-                null,
+                !orderItem.serviceId ? resourceEntity as ProductEntity : null,
                 orderItem.serviceId,
-                null
+                orderItem.serviceId ? resourceEntity as ServiceEntity : null
             );
 
             resolve(orderItemEntity)

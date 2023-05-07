@@ -33,7 +33,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                         userId: createOrderData.order.userId
                     });
                     var data = [];
-                    if (createOrderData.services) {
+                    if (createOrderData.services && createOrderData.services.length != 0) {
                         for (var i = 0; i < createOrderData.services.length; i++) {
                             data.push({
                                 name: 'arrbit',
@@ -41,7 +41,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                                 serviceId: createOrderData.services[i]
                             });
                         }
-                    } else if (createOrderData.products) {
+                    } else if (createOrderData.products && createOrderData.products.length != 0) {
                         for (var i = 0; i < createOrderData.products.length; i++) {
                             data.push({
                                 name: 'arrbit',
@@ -60,6 +60,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
 
         },
             [
+                OrderValidationCases.ORDER_ITEMS_FROM_THE_SAME_BRANCH,       // not implemented
                 OrderValidationCases.NO_ORDER_CREATION_BLOCK,
             ])
     }
@@ -86,21 +87,25 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
 
                     var data = [];
 
-                    if (updateOrderData.services && orderItems[0].serviceId) {
+                    if (updateOrderData.services &&
+                        updateOrderData.services.length != null &&
+                        orderItems[0].serviceId) {
                         await OrderItem.destroy({ where: { orderId: updateOrderPathParam['orderId'] } });
                         for (var i = 0; i < updateOrderData.services.length; i++) {
                             data.push({
                                 name: 'arrbit',
-                                orderId: updateOrderData.order,
+                                orderId: updateOrderPathParam['orderId'],
                                 serviceId: updateOrderData.services[i]
                             });
                         }
-                    } else if (updateOrderData.products && orderItems[0].productId) {
+                    } else if (updateOrderData.products &&
+                        updateOrderData.products.length != null &&
+                        orderItems[0].productId) {
                         await OrderItem.destroy({ where: { orderId: updateOrderPathParam['orderId'] } });
                         for (var i = 0; i < updateOrderData.products.length; i++) {
                             data.push({
                                 name: 'arrbit',
-                                orderId: updateOrderData.order,
+                                orderId: updateOrderPathParam['orderId'],
                                 productId: updateOrderData.products[i]
                             });
                         }
@@ -109,13 +114,18 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                         await OrderItem.bulkCreate(data);
                     resolve(BaseUpdateResponse.build(updateOrderPathParam['orderId'], [CUDResponseObjects.order]));
                 } catch (err) {
+                    console.log(err)
                     reject(err)
                 }
             });
 
         },
             [
-                OrderValidationCases.CAN_UPDATE_ORDER,
+                OrderValidationCases.ORDER_ITEMS_TYPE_RESERVED,
+                // not implemented, means in update, if you switch to items of type products from services or vice versa,
+                // you will get an error
+                OrderValidationCases.ORDER_ITEMS_FROM_THE_SAME_BRANCH,       // not implemented
+                OrderValidationCases.CAN_UPDATE_ORDER,                       // not implemented
             ])
     }
     deleteOrder(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -128,12 +138,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                             id: deleteOrderPathParam['orderId']
                         }
                     })
-                    // this may not be required in cascade delete of order (and the same thing for similar cases in the project)
-                    await OrderItem.destroy({
-                        where: {
-                            orderId: deleteOrderPathParam['orderId']
-                        }
-                    })
+                    // no need for deleting order items since delete cascade of orders will handle it.
                     resolve(BaseDeleteResponse.build(deleteOrderPathParam['orderId'], [CUDResponseObjects.order]));
                 } catch (err) {
                     reject(err)
@@ -142,7 +147,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
 
         },
             [
-                OrderValidationCases.CAN_DELETE_ORDER,
+                OrderValidationCases.CAN_DELETE_ORDER,                 // not implemented
             ])
     }
     getOrders(param: BaseParam<any>): Promise<BaseReadResponse<OrderEntity>> {

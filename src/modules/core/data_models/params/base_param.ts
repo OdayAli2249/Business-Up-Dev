@@ -74,7 +74,7 @@ class Metadata {
     request: any;
 
     constructor(request: Object) {
-        this.userId = 10;              // temporary
+        this.userId = 21;              // temporary
         this.request = request;
     }
 }

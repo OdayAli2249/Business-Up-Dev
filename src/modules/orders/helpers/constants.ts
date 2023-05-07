@@ -19,6 +19,8 @@ export abstract class OrderValidationCases {
     public static readonly CAN_UPDATE_ORDER: string = 'CAN_UPDATE_ORDER';
     public static readonly CAN_DELETE_ORDER: string = 'CAN_DELETE_ORDER';
     public static readonly NO_ORDER_DISPLAY_BLOCK: string = 'NO_ORDER_DISPLAY_BLOCK';
+    public static readonly ORDER_ITEMS_FROM_THE_SAME_BRANCH: string = 'ORDER_ITEMS_FROM_THE_SAME_BRANCH';
+    public static readonly ORDER_ITEMS_TYPE_RESERVED: string = 'ORDER_ITEMS_TYPE_RESERVED';
 }
 
 export abstract class OrderErrorMessages {
