@@ -106,24 +106,27 @@ class Branch extends Model<InferAttributes<Branch, { omit: 'posts' | 'products' 
 
     static associate(models: Map<string, BaseModel>) {
 
-        Branch.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.USER_BRANCHES], foreignKey: ForeignKeys.BRANCHE });
-        Branch.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
+        Branch.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.USER_BRANCHES], foreignKey: ForeignKeys.BRANCHE, onDelete: 'CASCADE' });
+        Branch.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
         Branch.hasMany(models[ModelsName.SERVICES], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.BRANCHE
-            }
+            },
+            onDelete: 'CASCADE'
         });
         Branch.hasMany(models[ModelsName.PRODUCTS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.BRANCHE
-            }
+            },
+            onDelete: 'CASCADE'
         });
         Branch.hasMany(models[ModelsName.PERMISSION_GROUPS], {
             foreignKey: {
                 name: ForeignKeys.BRANCHE
-            }
+            },
+            onDelete: 'CASCADE'
         });
     }
 }

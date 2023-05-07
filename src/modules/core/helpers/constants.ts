@@ -11,6 +11,12 @@ export abstract class CUDResponseTemplateMessages {
     public static readonly DELETE_TEMPLATE_MESSAGE: string = "Deleted";
 }
 
+export abstract class Actions {
+    public static readonly CREATE: string = "Create";
+    public static readonly UPDATE: string = "Update";
+    public static readonly DELETE: string = "Delete";
+}
+
 
 export abstract class CoreValidationErrors {
     public static readonly UNKNOWN: string = 'UNKNOWN';
@@ -28,6 +34,7 @@ export abstract class CoreValidationCases {
     public static readonly TIME_STAMP_AUTHORIZED: string = 'TIME_STAMP_AUTHORIZED';
     public static readonly HAVE_ACCESS_TO_RESOURCE: string = 'HAVE_ACCESS_TORESOURCE';
     public static readonly DATA_SOURCE_IS_UNLOCKED: string = 'DATA_SOURCE_IS_UNLOCKED';
+    public static readonly USER_WORKS_IN_SERVICE_PROVIDER: string = 'USER_WORKS_IN_SERVICE_PROVIDER';
 }
 
 export abstract class CoreErrorMessage {

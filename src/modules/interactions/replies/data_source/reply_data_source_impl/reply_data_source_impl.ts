@@ -14,6 +14,7 @@ import { BaseParam } from 'src/modules/core/data_models/params/base_param';
 import { CUDResponseObjects } from 'src/modules/core/data_models/enums/cud_response_objects';
 import { ReplyValidationCases } from '../../helpers/constants';
 import { Reply } from 'src/data/database/models/reply';
+import { CoreValidationCases } from 'src/modules/core/helpers/constants';
 
 @Injectable()
 export class ReplyDataSourceImpl extends CoreDataSourceImpl implements ReplyDataSource {
@@ -33,7 +34,7 @@ export class ReplyDataSourceImpl extends CoreDataSourceImpl implements ReplyData
                     replyEntity.commentId = createReplyQueryParam['commentId']
                     // passing entity object from directly from cloud my cause errors, so test this
                     let reply = await Reply.create(replyEntity)
-                    resolve(BaseCreateResponse.build(reply.id, CUDResponseObjects.reply));
+                    resolve(BaseCreateResponse.build(reply.id, [CUDResponseObjects.reply]));
                 } catch (err) {
                     reject(err)
                 }
@@ -42,6 +43,8 @@ export class ReplyDataSourceImpl extends CoreDataSourceImpl implements ReplyData
         },
             [
                 ReplyValidationCases.NO_REPLY_CREATION_BLOCK,
+                // if user reply on comment as service provider, user should be working in this service provider.
+                CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER
             ])
     }
     updateReply(param: BaseParam<UpdateReplyDTO>): Promise<BaseUpdateResponse> {
@@ -54,7 +57,7 @@ export class ReplyDataSourceImpl extends CoreDataSourceImpl implements ReplyData
                             id: param.getPathParam()['replyId']
                         }
                     })
-                    resolve(BaseUpdateResponse.build(0, CUDResponseObjects.reply));
+                    resolve(BaseUpdateResponse.build(0, [CUDResponseObjects.reply]));
                 } catch (err) {
                     reject(err)
                 }
@@ -63,6 +66,7 @@ export class ReplyDataSourceImpl extends CoreDataSourceImpl implements ReplyData
         },
             [
                 ReplyValidationCases.CAN_UPDATE_REPLY,
+                CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER
             ])
     }
     deleteReply(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -74,7 +78,7 @@ export class ReplyDataSourceImpl extends CoreDataSourceImpl implements ReplyData
                             id: param.getPathParam()['replyId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(0, CUDResponseObjects.reply));
+                    resolve(BaseDeleteResponse.build(0, [CUDResponseObjects.reply]));
                 } catch (err) {
                     reject(err)
                 }

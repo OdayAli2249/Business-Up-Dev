@@ -9,10 +9,10 @@ export class ReplyHandlersWrapper extends CoreHandlersWrapper {
     handleError(validationResult: ValidationResult, failure: Failure): Failure {
         switch (validationResult.error) {
             case ReplyValidationErrors.CAN_NOT_DELETE_REPLY: {
-                return this.createErrorObject('', validationResult, failure);
+                return this.createErrorObject('you can not delete others replies', validationResult, failure);
             }
             case ReplyValidationErrors.CAN_NOT_UPDATE_REPLY: {
-                return this.createErrorObject('', validationResult, failure);
+                return this.createErrorObject('you can not update others replies', validationResult, failure);
             }
             case ReplyValidationErrors.REPLY_CREATION_BLOCK: {
                 return this.createErrorObject('', validationResult, failure);

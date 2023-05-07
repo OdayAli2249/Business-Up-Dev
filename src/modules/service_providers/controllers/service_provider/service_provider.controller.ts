@@ -63,12 +63,13 @@ export class ServiceProviderController {
         });
     }
 
-    @Delete('remove-users-from-service-provider')
-    removeUsersFromServiceProvider(@Body() removeUsersFromServiceProviderDTO: RemoveUsersFromServiceProviderDTO)
+    @Delete('remove-user-from-service-provider')
+    removeUserFromServiceProvider(@Body() removeUsersFromServiceProviderDTO: RemoveUsersFromServiceProviderDTO,
+        @Query('serviceProviderId') serviceProviderId)
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {
-            resolve(await this.serviceProviderService.removeUsersFromServiceProvider(removeUsersFromServiceProviderDTO));
+            resolve(await this.serviceProviderService.removeUserFromServiceProvider(removeUsersFromServiceProviderDTO,
+                serviceProviderId as number));
         });
     }
-
 }

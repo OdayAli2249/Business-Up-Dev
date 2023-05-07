@@ -22,7 +22,7 @@ export class SubscribtionValidatorImpl extends CoreValidatorImpl implements Subs
                     serviceProviderId: param.getPathParam()['serviceProviderId']
                 }
             })
-            resolve(subscribtion != 0 ?
+            resolve(subscribtion == 0 ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     SubscribtionValidationErrors.ALREADY_SUBSCRIBED,
@@ -30,5 +30,4 @@ export class SubscribtionValidatorImpl extends CoreValidatorImpl implements Subs
                     'subscribtion', 'create', {}))
         });
     }
-
 }

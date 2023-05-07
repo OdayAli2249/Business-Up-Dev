@@ -26,7 +26,8 @@ export class PermissionService {
             pathParam: pathParam,
             queryParam: null,
             data: createPermissionGroupDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -43,7 +44,8 @@ export class PermissionService {
             pathParam: pathParam,
             queryParam: null,
             data: updatePermissionGroupDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -59,7 +61,8 @@ export class PermissionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -76,7 +79,8 @@ export class PermissionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<PermissionGroupEntity>>;

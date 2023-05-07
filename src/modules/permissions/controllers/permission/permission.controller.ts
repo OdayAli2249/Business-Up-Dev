@@ -33,7 +33,7 @@ export class PermissionController {
         });
     }
 
-    @Delete('cancel/:permissionGroupId')
+    @Delete('delete/:permissionGroupId')
     deletePermissionGroup(@Param('permissionGroupId') permissionGroupId)
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {
@@ -42,7 +42,7 @@ export class PermissionController {
     }
 
     @Get('get/:branchId')
-    getPermissionGroups(branchId: number): Promise<BaseReadResponse<PermissionGroupEntity> | Failure> {
+    getPermissionGroups(@Param('branchId') branchId: number): Promise<BaseReadResponse<PermissionGroupEntity> | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.permissionService.getPermissionGroups(branchId as number));
         });

@@ -15,7 +15,7 @@ export abstract class CommentValidationErrors {
 
 export abstract class CommentValidationCases {
     public static readonly NO_COMMENT_CREATION_BLOCK: string = 'NO_COMMENT_CREATION_BLOCK';
-    public static readonly CAN_UPDATE_COMMMENT: string = 'CAN_UPDATE_COMMMENT';
+    public static readonly CAN_UPDATE_COMMENT: string = 'CAN_UPDATE_COMMENT';
     public static readonly CAN_DELETE_COMMENT: string = 'CAN_DELETE_COMMENT';
     public static readonly NO_COMMENT_DISPLAY_BLOCK: string = 'NO_COMMENT_DISPLAY_BLOCK';
 }

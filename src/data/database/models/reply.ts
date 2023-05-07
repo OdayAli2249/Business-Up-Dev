@@ -37,9 +37,9 @@ class Reply extends Model<InferAttributes<Reply>, InferCreationAttributes<Reply>
     }
 
     static associate(models: Map<string, BaseModel>) {
-        Reply.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER });
-        Reply.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        Reply.belongsTo(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.COMMENT });
+        Reply.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        Reply.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        Reply.belongsTo(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.COMMENT, onDelete: 'CASCADE' });
     }
 }
 

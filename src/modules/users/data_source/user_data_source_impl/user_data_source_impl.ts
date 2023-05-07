@@ -24,8 +24,12 @@ export class UserDataSourceImpl extends CoreDataSourceImpl implements UserDataSo
         return this.userValidatorsWrapper.validate<BaseCreateResponse, CreateUserDTO>(param, () => {
             return new Promise<BaseCreateResponse>(async (resolve, reject) => {
                 try {
-                    let user = await User.create(param.getData().user);
-                    resolve(BaseCreateResponse.build(user.id, CUDResponseObjects.user));
+                    let user = await User.create({
+                        name: param.getData().user.name,
+                        firstName: param.getData().user.firstName,
+                        lastName: param.getData().user.lastName
+                    });
+                    resolve(BaseCreateResponse.build(user.id, [CUDResponseObjects.user]));
                 } catch (err) {
                     reject(err)
                 }
@@ -39,8 +43,12 @@ export class UserDataSourceImpl extends CoreDataSourceImpl implements UserDataSo
             return new Promise<BaseUpdateResponse>(async (resolve, reject) => {
                 try {
                     let updateUserMetaData = param.getMetaData();
-                    await User.update(param.getData().user, { where: { id: updateUserMetaData.userId } });
-                    resolve(BaseUpdateResponse.build(updateUserMetaData.userId, CUDResponseObjects.user));
+                    await User.update({
+                        name: param.getData().user.name,
+                        firstName: param.getData().user.firstName,
+                        lastName: param.getData().user.lastName
+                    }, { where: { id: updateUserMetaData.userId } });
+                    resolve(BaseUpdateResponse.build(updateUserMetaData.userId, [CUDResponseObjects.user]));
                 } catch (err) {
                     reject(err)
                 }
@@ -57,14 +65,15 @@ export class UserDataSourceImpl extends CoreDataSourceImpl implements UserDataSo
                 try {
                     let deleteUserMetaData = param.getMetaData();
                     await User.destroy({ where: { id: deleteUserMetaData.userId } });
-                    resolve(BaseDeleteResponse.build(deleteUserMetaData.userId, CUDResponseObjects.user));
+                    resolve(BaseDeleteResponse.build(deleteUserMetaData.userId, [CUDResponseObjects.user]));
                 } catch (err) {
                     reject(err)
                 }
             });
-
         },
-            [])
+            [
+                UserValidationCases.CAN_DELETE_USER           // not implemented
+            ])
     }
     getUser(param: BaseParam<any>): Promise<BaseReadResponse<UserEntity>> {
         return this.userValidatorsWrapper.validate<BaseReadResponse<UserEntity>, any>(param, () => {

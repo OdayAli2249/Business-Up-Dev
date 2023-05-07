@@ -52,14 +52,15 @@ class Order extends Model<InferAttributes<Order, { omit: 'orderItems' }>, InferC
 
     static associate(models: Map<string, BaseModel>) {
         Order.belongsTo(models[ModelsName.USERS], {
-            foreignKey: ForeignKeys.USER
-
+            foreignKey: ForeignKeys.USER,
+            onDelete: 'CASCADE'
         });
         Order.hasMany(models[ModelsName.ORDER_ITEMS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.ORDER
-            }
+            },
+            onDelete: 'CASCADE'
         });
     }
 }

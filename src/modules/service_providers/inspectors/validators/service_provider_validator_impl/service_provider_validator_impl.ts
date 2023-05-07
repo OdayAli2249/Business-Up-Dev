@@ -8,8 +8,7 @@ import { BaseParam } from 'src/modules/core/data_models/params/base_param';
 import { UserServiceProviderRole } from 'src/data/database/models/user_service_provider_role';
 import { ServiceProviderValidationErrors } from 'src/modules/service_providers/helpers/constants';
 import { ProcessReult } from 'src/modules/core/data_models/enums/process_result';
-import { Branch } from 'src/data/database/models/branch';
-import { UserBranch } from 'src/data/database/models/user_branch';
+import { RemoveUsersFromServiceProviderDTO } from 'src/modules/service_providers/data_models/dtos/remove_users_from_service_provider_dto';
 
 @Injectable()
 export class ServiceProviderValidatorImpl extends CoreValidatorImpl implements ServiceProviderValidator {
@@ -38,7 +37,8 @@ export class ServiceProviderValidatorImpl extends CoreValidatorImpl implements S
         return new Promise(async (resolve, _) => {
             let role = await UserServiceProviderRole.count({
                 where: {
-                    role: ['master']
+                    role: ['master'],
+                    serviceProviderId: param.getQueryParam()['serviceProviderId']
                 }
             })
             resolve(role > 1 ? ValidationResult.buildSuccess() :
@@ -60,4 +60,67 @@ export class ServiceProviderValidatorImpl extends CoreValidatorImpl implements S
             resolve(ValidationResult.buildSuccess())
         });
     }
+
+    canRemoveUserFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<ValidationResult> {
+        return new Promise(async (resolve, _) => {
+            let workInServiceProvider = true;       // since work in service provider validator is not implmented, we can assume it alaways true for now
+            let isMaster = await this.isMaster(param);
+            if (workInServiceProvider) {
+                if (param.getMetaData().userId == param.getData().user) {
+                    if (isMaster.result == ProcessReult.success) {
+                        let notTheOnlyMasterInServiceProvider = await this.isNotTheOnlyMasterInServiceProvider(param);
+                        if (notTheOnlyMasterInServiceProvider.result == ProcessReult.success) {
+                            resolve(ValidationResult.buildSuccess())
+                        } else {
+                            resolve(
+                                ValidationResult.build(null,
+                                    ServiceProviderValidationErrors.THE_ONLY_MASTER_IN_SERVICE_PROVIDER,
+                                    ProcessReult.failure,
+                                    'service provider', 'delete', {}))
+                        }
+                    } else {
+                        resolve(ValidationResult.buildSuccess())
+                    }
+                } else {
+                    let sourceUserRole = await UserServiceProviderRole.findOne({
+                        where: {
+                            userId: param.getMetaData().userId,
+                            serviceProviderId: param.getQueryParam()['serviceProviderId'],
+                        }
+                    })
+                    let targetUserRole = await UserServiceProviderRole.findOne({
+                        where: {
+                            userId: param.getData().user,
+                            serviceProviderId: param.getQueryParam()['serviceProviderId'],
+                        }
+                    })
+
+                    let userRoleRank: Map<string, number> = new Map([
+                        ['master', 3],
+                        ['sub-master', 2],
+                        ['blank', 1]
+                    ]);
+
+                    if (userRoleRank[sourceUserRole.role] > userRoleRank[targetUserRole.role]) {
+                        resolve(ValidationResult.buildSuccess())
+                    } else {
+                        resolve(
+                            ValidationResult.build(null,
+                                ServiceProviderValidationErrors.CAN_NOT_REMOVE_USER_FROM_SERVICE_PROVIDER,
+                                ProcessReult.failure,
+                                'service provider', 'delete', {}))
+                    }
+                }
+
+            } else {
+                resolve(
+                    ValidationResult.build(null,
+                        ServiceProviderValidationErrors.USER_DO_NOT_WORK_IN_SERVICE_PROVIDER,
+                        ProcessReult.failure,
+                        'service provider', 'delete', {}))
+            }
+
+        });
+    }
+
 }

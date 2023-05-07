@@ -17,6 +17,7 @@ import { Service } from 'src/data/database/models/service';
 import { PermissionGroup } from 'src/data/database/models/permission_group';
 import { Permission } from 'src/data/database/models/permission';
 import { Op } from 'sequelize';
+import { CoreValidationCases } from 'src/modules/core/helpers/constants';
 
 @Injectable()
 export class ServiceDataSourceImpl extends CoreDataSourceImpl implements ServiceDataSource {
@@ -29,8 +30,11 @@ export class ServiceDataSourceImpl extends CoreDataSourceImpl implements Service
                 try {
                     let createServiceData = param.getData();
                     createServiceData.service.branchId = param.getPathParam()['branchId'];
-                    let service = await Service.create(createServiceData.service);
-                    resolve(BaseCreateResponse.build(service.id, CUDResponseObjects.service));
+                    let service = await Service.create({
+                        name: createServiceData.service.name,
+                        branchId: createServiceData.service.branchId
+                    });
+                    resolve(BaseCreateResponse.build(service.id, [CUDResponseObjects.service]));
                 } catch (err) {
                     reject(err)
                 }
@@ -39,18 +43,19 @@ export class ServiceDataSourceImpl extends CoreDataSourceImpl implements Service
         },
             [
                 ServiceValidationCases.NO_TEMPORARY_SERVICE_CREATE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     updateService(param: BaseParam<UpdateServiceDTO>): Promise<BaseUpdateResponse> {
         return this.serviceValidatorsWrapper.validate<BaseUpdateResponse, UpdateServiceDTO>(param, () => {
             return new Promise<BaseUpdateResponse>(async (resolve, reject) => {
                 try {
-                    await Service.update(param.getData().service, {
+                    await Service.update({ name: param.getData().service.name }, {
                         where: {
                             id: param.getPathParam()['serviceId']
                         }
                     })
-                    resolve(BaseUpdateResponse.build(0, CUDResponseObjects.service));
+                    resolve(BaseUpdateResponse.build(0, [CUDResponseObjects.service]));
                 } catch (err) {
                     reject(err)
                 }
@@ -59,6 +64,7 @@ export class ServiceDataSourceImpl extends CoreDataSourceImpl implements Service
         },
             [
                 ServiceValidationCases.NO_TEMPORARY_SERVICE_UPDATE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     deleteService(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -70,7 +76,7 @@ export class ServiceDataSourceImpl extends CoreDataSourceImpl implements Service
                             id: param.getPathParam()['serviceId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(service, CUDResponseObjects.comment));
+                    resolve(BaseDeleteResponse.build(service, [CUDResponseObjects.service]));
                 } catch (err) {
                     reject(err)
                 }
@@ -79,6 +85,7 @@ export class ServiceDataSourceImpl extends CoreDataSourceImpl implements Service
         },
             [
                 ServiceValidationCases.NO_TEMPORARY_SERVICE_DELETE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     getServices(param: BaseParam<any>): Promise<BaseReadResponse<ServiceEntity>> {

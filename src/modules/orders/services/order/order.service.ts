@@ -24,7 +24,8 @@ export class OrderService {
             pathParam: null,
             queryParam: null,
             data: createOrderDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -40,7 +41,8 @@ export class OrderService {
             pathParam: pathParam,
             queryParam: null,
             data: updateOrderDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -56,7 +58,8 @@ export class OrderService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -72,7 +75,8 @@ export class OrderService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<OrderEntity>>;
@@ -89,7 +93,8 @@ export class OrderService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<OrderItemEntity>>;

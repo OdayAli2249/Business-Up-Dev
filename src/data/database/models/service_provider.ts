@@ -115,18 +115,18 @@ class ServiceProvider extends Model<InferAttributes<ServiceProvider, { omit: 'br
     }
 
     static associate(models: Map<string, BaseModel>) {
-        ServiceProvider.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.SUBSCRIBTIONS], foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        ServiceProvider.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.HIRING_REQUESTS], foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        ServiceProvider.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.USER_SERVICE_PROVIDER_ROLES], foreignKey: ForeignKeys.SERVICE_PROVIDER });
+        ServiceProvider.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.SUBSCRIBTIONS], foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        ServiceProvider.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.HIRING_REQUESTS], foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        ServiceProvider.belongsToMany(models[ModelsName.USERS], { through: models[ModelsName.USER_SERVICE_PROVIDER_ROLES], foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
         ServiceProvider.hasMany(models[ModelsName.BRANCHES], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.SERVICE_PROVIDER
             }
         });
-        ServiceProvider.hasMany(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        ServiceProvider.hasMany(models[ModelsName.REACTIONS], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        ServiceProvider.hasMany(models[ModelsName.REPLIES], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
+        ServiceProvider.hasMany(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        ServiceProvider.hasMany(models[ModelsName.REACTIONS], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        ServiceProvider.hasMany(models[ModelsName.REPLIES], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
     }
 }
 

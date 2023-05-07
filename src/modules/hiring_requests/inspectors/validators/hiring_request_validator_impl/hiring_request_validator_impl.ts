@@ -20,15 +20,17 @@ export class HiringRequestValidatorImpl extends CoreValidatorImpl implements Hir
             resolve(ValidationResult.buildSuccess())
         });
     }
-    isRejectedOrNotAlreadyCreated(param: BaseParam<CreateHiringRequestDTO>): Promise<ValidationResult> {
+    isRejectedOrNotAlreadyCreated(param: BaseParam<any>): Promise<ValidationResult> {
         return new Promise(async (resolve, _) => {
-            let hiringRequest = await HiringRequest.findOne({
+            let hiringRequest = await HiringRequest.findAndCountAll({
                 where: {
                     userId: param.getMetaData().userId,
-                    serviceProviderId: param.getPathParam()['serviceProviderId']
+                    serviceProviderId: param.getPathParam()['serviceProviderId'] as number
                 }
             })
-            resolve(!hiringRequest || hiringRequest.name == 'rejected' ? ValidationResult.buildSuccess() :
+            let allRejected = true;
+            hiringRequest.rows.map((value, _, __) => { (value.name != 'rejected') ? allRejected = false : null })
+            resolve(!hiringRequest.count || allRejected ? ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     HiringRequestValidationErrors.NEITHER_REJECTED_NOR_NOT_ALREADY_CREATED,
                     ProcessReult.failure,
@@ -40,8 +42,11 @@ export class HiringRequestValidatorImpl extends CoreValidatorImpl implements Hir
     // }
     isPending(param: BaseParam<any>): Promise<ValidationResult> {
         return new Promise(async (resolve, _) => {
-            let hiringRequest = await HiringRequest.findOne({ where: { id: param.getPathParam()['hiringRequestId'] } })
-            resolve(hiringRequest.name == 'pending' ?
+            let hiringRequest = await HiringRequest.findAll({ where: { id: param.getPathParam()['hiringRequestId'] as number } })
+            let ispending = false;
+            if (hiringRequest && hiringRequest.length != 0)
+                hiringRequest.map((value, _, __) => { (value.name == 'pending') ? ispending = true : null })
+            resolve(ispending ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     HiringRequestValidationErrors.NOT_PENDING,

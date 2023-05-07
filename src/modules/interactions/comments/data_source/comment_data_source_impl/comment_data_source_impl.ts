@@ -14,6 +14,7 @@ import { BaseParam } from 'src/modules/core/data_models/params/base_param';
 import { CUDResponseObjects } from 'src/modules/core/data_models/enums/cud_response_objects';
 import { CommentValidationCases } from '../../helpers/constant';
 import { Comment } from 'src/data/database/models/comment';
+import { CoreValidationCases } from 'src/modules/core/helpers/constants';
 
 @Injectable()
 export class CommentDataSourceImpl extends CoreDataSourceImpl implements CommentDataSource {
@@ -33,13 +34,15 @@ export class CommentDataSourceImpl extends CoreDataSourceImpl implements Comment
                     let postId = createCommentQueryParam['postId']
                     if (serviceProviderId)
                         commentEntity.serviceProviderId = serviceProviderId;
+                    // we consider that there is id of service or post in query param without validation
                     if (postId)
                         commentEntity.postId = postId;
                     else commentEntity.serviceId = createCommentQueryParam['serviceId'];
                     // passing entity object from directly from cloud my cause errors, so test this
                     let comment = await Comment.create(commentEntity);
-                    resolve(BaseCreateResponse.build(comment.id, CUDResponseObjects.comment));
+                    resolve(BaseCreateResponse.build(comment.id, [CUDResponseObjects.comment]));
                 } catch (err) {
+                    console.log(err);
                     reject(err)
                 }
             });
@@ -47,6 +50,7 @@ export class CommentDataSourceImpl extends CoreDataSourceImpl implements Comment
         },
             [
                 CommentValidationCases.NO_COMMENT_CREATION_BLOCK,
+                CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER       // not implemented
             ])
     }
     updateComment(param: BaseParam<UpdateCommentDTO>): Promise<BaseUpdateResponse> {
@@ -57,12 +61,15 @@ export class CommentDataSourceImpl extends CoreDataSourceImpl implements Comment
                     // it gonna be disaster if user add ids to this object
                     // for example: comment contain postId, and in update, we found in the object random service id
                     // and we add this id to database
-                    await Comment.update(param.getData().comment, {
+                    await Comment.update({
+                        name: param.getData().comment.name,
+                        serviceProviderId: param.getData().comment.serviceProviderId
+                    }, {
                         where: {
                             id: param.getPathParam()['commentId']
                         }
                     })
-                    resolve(BaseUpdateResponse.build(0, CUDResponseObjects.comment));
+                    resolve(BaseUpdateResponse.build(0, [CUDResponseObjects.comment]));
                 } catch (err) {
                     reject(err)
                 }
@@ -70,7 +77,8 @@ export class CommentDataSourceImpl extends CoreDataSourceImpl implements Comment
 
         },
             [
-                CommentValidationCases.CAN_UPDATE_COMMMENT,
+                CommentValidationCases.CAN_UPDATE_COMMENT,
+                CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER              // not implemented
             ])
     }
     deleteComment(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -82,7 +90,7 @@ export class CommentDataSourceImpl extends CoreDataSourceImpl implements Comment
                             id: param.getPathParam()['commentId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(0, CUDResponseObjects.comment));
+                    resolve(BaseDeleteResponse.build(0, [CUDResponseObjects.comment]));
                 } catch (err) {
                     reject(err)
                 }

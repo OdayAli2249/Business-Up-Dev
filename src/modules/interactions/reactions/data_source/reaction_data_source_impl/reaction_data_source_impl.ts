@@ -14,6 +14,7 @@ import { BaseParam } from 'src/modules/core/data_models/params/base_param';
 import { CUDResponseObjects } from 'src/modules/core/data_models/enums/cud_response_objects';
 import { ReactionValidationCases } from '../../helpers/constant';
 import { Reaction } from 'src/data/database/models/reaction';
+import { CoreValidationCases } from 'src/modules/core/helpers/constants';
 
 @Injectable()
 export class ReactionDataSourceImpl extends CoreDataSourceImpl implements ReactionDataSource {
@@ -36,8 +37,9 @@ export class ReactionDataSourceImpl extends CoreDataSourceImpl implements Reacti
                     else reactionEntity.serviceId = createReactionQueryParam['serviceId'];
                     // passing entity object from directly from cloud my cause errors, so test this
                     let reaction = await Reaction.create(reactionEntity);
-                    resolve(BaseCreateResponse.build(reaction.id, CUDResponseObjects.reaction));
+                    resolve(BaseCreateResponse.build(reaction.id, [CUDResponseObjects.reaction]));
                 } catch (err) {
+                    console.log(err);
                     reject(err)
                 }
             });
@@ -45,6 +47,7 @@ export class ReactionDataSourceImpl extends CoreDataSourceImpl implements Reacti
         },
             [
                 ReactionValidationCases.NO_REACTION_CREATION_BLOCK,
+                CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER
             ])
     }
     updateReaction(param: BaseParam<UpdateReactionDTO>): Promise<BaseUpdateResponse> {
@@ -60,7 +63,7 @@ export class ReactionDataSourceImpl extends CoreDataSourceImpl implements Reacti
                             id: param.getPathParam()['reactionId']
                         }
                     })
-                    resolve(BaseUpdateResponse.build(0, CUDResponseObjects.reaction));
+                    resolve(BaseUpdateResponse.build(0, [CUDResponseObjects.reaction]));
                 } catch (err) {
                     reject(err)
                 }
@@ -69,6 +72,7 @@ export class ReactionDataSourceImpl extends CoreDataSourceImpl implements Reacti
         },
             [
                 ReactionValidationCases.CAN_UPDATE_REACTION,
+                CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER
             ])
     }
     deleteReaction(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -80,7 +84,7 @@ export class ReactionDataSourceImpl extends CoreDataSourceImpl implements Reacti
                             id: param.getPathParam()['reactionId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(0, CUDResponseObjects.reaction));
+                    resolve(BaseDeleteResponse.build(0, [CUDResponseObjects.reaction]));
                 } catch (err) {
                     reject(err)
                 }

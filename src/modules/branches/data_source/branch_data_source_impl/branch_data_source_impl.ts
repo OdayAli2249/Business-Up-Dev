@@ -62,7 +62,7 @@ export class BranchDataSourceImpl extends CoreDataSourceImpl implements BranchDa
                     })
                     await UserServiceProviderRole.bulkCreate(userServiceProviderRoles)
                     await UserBranch.bulkCreate(userBranches)
-                    resolve(BaseCreateResponse.build(0, CUDResponseObjects.branch));
+                    resolve(BaseCreateResponse.build(0, [CUDResponseObjects.branch]));
                 } catch (err) {
                     reject(err)
                 }
@@ -83,18 +83,29 @@ export class BranchDataSourceImpl extends CoreDataSourceImpl implements BranchDa
                 try {
                     let branchesWithUsersDTO = param.getData();
                     let userBranches = []
+                    let users: number[] = []
                     for (var i = 0; i < branchesWithUsersDTO.sourceBranches.length; i++) {
-                        for (var j = 0; j < branchesWithUsersDTO.sourceBranches[i].users.length; j++) {
-                            userBranches.push({
-                                branchId: branchesWithUsersDTO.targetBranch,
-                                userId: branchesWithUsersDTO.sourceBranches[i].users[j],
-                                name: 'arbit'
-                            });
+                        for (var j = 0; j < branchesWithUsersDTO.sourceBranches[i].userIds.length; j++) {
+                            users.push(branchesWithUsersDTO.sourceBranches[i].userIds[j])
                         }
                     }
+                    console.log(users.length);
+                    users = [...new Set(users)] as number[]
+                    console.log(users.length);
+                    for (var i = 0; i < users.length; i++) {
+                        userBranches.push({
+                            branchId: branchesWithUsersDTO.targetBranch,
+                            userId: users[i],
+                            name: 'arbit'
+                        });
+                    }
+
                     await UserBranch.bulkCreate(userBranches)
-                    resolve(BaseCreateResponse.build(0, CUDResponseObjects.branch));
+
+                    resolve(BaseCreateResponse.build(0, [CUDResponseObjects.branch]));
+
                 } catch (err) {
+                    console.log(err);
                     reject(err)
                 }
             });
@@ -114,21 +125,20 @@ export class BranchDataSourceImpl extends CoreDataSourceImpl implements BranchDa
                     for (var i = 0; i < branchesWithUsersDTO.sourceBranches.length; i++) {
                         await UserBranch.destroy({
                             where: {
-                                userId: branchesWithUsersDTO.sourceBranches[i].users.map((user, _, __) => user.id),
+                                userId: branchesWithUsersDTO.sourceBranches[i].userIds,
                                 branchId: branchesWithUsersDTO.sourceBranches[i].id
                             }
                         })
                         let permissionGroups = await PermissionGroup.findAll({ where: { branchId: branchesWithUsersDTO.sourceBranches[i].id } })
-                        await Permission.destroy({
-                            where: {
-                                userId: branchesWithUsersDTO.sourceBranches[i].users.map((user, _, __) => user.id),
-                                permissionGroupId: permissionGroups.map((permissionGroup) => permissionGroup.id)
-                            }
-                        })
-                        // we also need to observe weither user is no longer belong to any branch so we can also remove him from roles, which make him out of whole service provider 
+                        if (permissionGroups)
+                            await Permission.destroy({
+                                where: {
+                                    userId: branchesWithUsersDTO.sourceBranches[i].userIds,
+                                    permissionGroupId: permissionGroups.map((permissionGroup) => permissionGroup.id)
+                                }
+                            })
                     }
-
-                    resolve(BaseDeleteResponse.build(0, CUDResponseObjects.branch));
+                    resolve(BaseDeleteResponse.build(0, [CUDResponseObjects.branch]));
                 } catch (err) {
                     reject(err)
                 }
@@ -136,16 +146,53 @@ export class BranchDataSourceImpl extends CoreDataSourceImpl implements BranchDa
 
         },
             [
-                BranchValidationCases.USERS_ARE_IN_THEIR_CORRECT_BRANCHES
+                BranchValidationCases.USERS_ARE_IN_THEIR_CORRECT_BRANCHES,
+                BranchValidationCases.NO_MASTER_OR_SUB_MASTER_USERS_IN_SOURCE_BRANCHES,       // not implemented
+                BranchValidationCases.NO_USERS_WILL_BE_REMOVED_FROM_ENTIRE_SERVICE_PROVIDER,  // not implemented
+                CoreValidationCases.MASTER_OR_SUBMASTER
             ])
     }
     transferExistedUsersToBranch(param: BaseParam<BranchesWithUsersDTO>): Promise<BaseUpdateResponse> {
         return this.branchValidatorsWrapper.validate<BaseUpdateResponse, BranchesWithUsersDTO>(param, () => {
             return new Promise<BaseUpdateResponse>(async (resolve, reject) => {
                 try {
-                    await this.removeExistedUsersFromBranch(param)
-                    await this.addExistedUsersToBranch(param)
-                    resolve(BaseUpdateResponse.build(1, CUDResponseObjects.branch));
+                    let branchesWithUsersDTO = param.getData();
+                    for (var i = 0; i < branchesWithUsersDTO.sourceBranches.length; i++) {
+                        await UserBranch.destroy({
+                            where: {
+                                userId: branchesWithUsersDTO.sourceBranches[i].userIds,
+                                branchId: branchesWithUsersDTO.sourceBranches[i].id
+                            }
+                        })
+                        let permissionGroups = await PermissionGroup.findAll({ where: { branchId: branchesWithUsersDTO.sourceBranches[i].id } })
+                        await Permission.destroy({
+                            where: {
+                                userId: branchesWithUsersDTO.sourceBranches[i].userIds,
+                                permissionGroupId: permissionGroups.map((permissionGroup) => permissionGroup.id)
+                            }
+                        })
+                    }
+                    let userBranches = []
+                    let users = []
+                    for (var i = 0; i < branchesWithUsersDTO.sourceBranches.length; i++) {
+                        for (var j = 0; j < branchesWithUsersDTO.sourceBranches[i].userIds.length; j++) {
+                            users.push(branchesWithUsersDTO.sourceBranches[i].userIds[j])
+                        }
+                    }
+
+                    console.log(users.length);
+                    users = [...new Set(users)] as number[]
+                    console.log(users.length);
+
+                    for (var i = 0; i < users.length; i++) {
+                        userBranches.push({
+                            branchId: branchesWithUsersDTO.targetBranch,
+                            userId: users[i],
+                            name: 'arbit'
+                        });
+                    }
+                    await UserBranch.bulkCreate(userBranches)
+                    resolve(BaseUpdateResponse.build(1, [CUDResponseObjects.branch]));
                 } catch (err) {
                     reject(err)
                 }
@@ -173,8 +220,9 @@ export class BranchDataSourceImpl extends CoreDataSourceImpl implements BranchDa
                     resolve(BaseReadResponse.build(
                         // Warning: be sure of avoiding infinit recursive - in includes
                         // this data source function can be used to get branch with its users also
+
                         await BranchEntity.buildListFromModel(await serviceProvider.getBranches(),
-                            (param.getQueryParam()['withUsers'] as boolean) == true ?
+                            (param.getQueryParam()['withUsers'] as boolean) ?
                                 [
                                     BranchIncludes.USERS
                                 ] : [])
@@ -187,7 +235,6 @@ export class BranchDataSourceImpl extends CoreDataSourceImpl implements BranchDa
             [
                 BranchValidationCases.DISPLAY_BRANCHES_ALLOWED,
                 // temporary
-                CoreValidationCases.CAN_DO_THIS_ACTION,
                 CoreValidationCases.DATA_SOURCE_IS_UNLOCKED
             ])
     }

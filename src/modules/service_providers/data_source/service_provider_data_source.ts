@@ -15,10 +15,14 @@ export abstract class ServiceProviderDataSource {
 
     abstract geteUserServiceProviders(param: BaseParam<any>): Promise<BaseReadResponse<ServiceProviderEntity>>
 
-    abstract removeUsersFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<BaseDeleteResponse>
+    abstract removeUserFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<BaseDeleteResponse>
 
     abstract addSubMasterUser(param: BaseParam<any>): Promise<BaseUpdateResponse>
 
     abstract removeSubMasterUser(param: BaseParam<any>): Promise<BaseUpdateResponse>
+
+    abstract addMasterUser(param: BaseParam<any>): Promise<BaseUpdateResponse>
+
+    abstract giveUpMasterRole(param: BaseParam<any>): Promise<BaseUpdateResponse>
 
 }

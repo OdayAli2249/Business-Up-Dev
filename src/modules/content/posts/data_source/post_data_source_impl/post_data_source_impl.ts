@@ -17,6 +17,7 @@ import { Post } from 'src/data/database/models/post';
 import { PermissionGroup } from 'src/data/database/models/permission_group';
 import { Permission } from 'src/data/database/models/permission';
 import { Op } from 'sequelize';
+import { CoreValidationCases } from 'src/modules/core/helpers/constants';
 
 @Injectable()
 export class PostDataSourceImpl extends CoreDataSourceImpl implements PostDataSource {
@@ -29,8 +30,8 @@ export class PostDataSourceImpl extends CoreDataSourceImpl implements PostDataSo
                 try {
                     let createPostData = param.getData();
                     createPostData.post.branchId = param.getPathParam()['branchId'];
-                    let post = await Post.create(createPostData.post);
-                    resolve(BaseCreateResponse.build(post.id, CUDResponseObjects.post));
+                    let post = await Post.create({ name: createPostData.post.name, branchId: createPostData.post.branchId });
+                    resolve(BaseCreateResponse.build(post.id, [CUDResponseObjects.post]));
                 } catch (err) {
                     reject(err)
                 }
@@ -39,18 +40,19 @@ export class PostDataSourceImpl extends CoreDataSourceImpl implements PostDataSo
         },
             [
                 PostValidationCases.NO_TEMPORARY_POST_CREATE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     updatePost(param: BaseParam<UpdatePostDTO>): Promise<BaseUpdateResponse> {
         return this.postValidatorsWrapper.validate<BaseUpdateResponse, UpdatePostDTO>(param, () => {
             return new Promise<BaseUpdateResponse>(async (resolve, reject) => {
                 try {
-                    await Post.update(param.getData().post, {
+                    await Post.update({ name: param.getData().post.name }, {
                         where: {
                             id: param.getPathParam()['postId']
                         }
                     })
-                    resolve(BaseUpdateResponse.build(0, CUDResponseObjects.post));
+                    resolve(BaseUpdateResponse.build(0, [CUDResponseObjects.post]));
                 } catch (err) {
                     reject(err)
                 }
@@ -59,6 +61,7 @@ export class PostDataSourceImpl extends CoreDataSourceImpl implements PostDataSo
         },
             [
                 PostValidationCases.NO_TEMPORARY_POST_UPDATE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     deletePost(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -70,7 +73,7 @@ export class PostDataSourceImpl extends CoreDataSourceImpl implements PostDataSo
                             id: param.getPathParam()['postId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(post, CUDResponseObjects.post));
+                    resolve(BaseDeleteResponse.build(post, [CUDResponseObjects.post]));
                 } catch (err) {
                     reject(err)
                 }
@@ -79,6 +82,7 @@ export class PostDataSourceImpl extends CoreDataSourceImpl implements PostDataSo
         },
             [
                 PostValidationCases.NO_TEMPORARY_POST_DELETE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     getPosts(param: BaseParam<any>): Promise<BaseReadResponse<PostEntity>> {

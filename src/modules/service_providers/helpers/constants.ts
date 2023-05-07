@@ -11,6 +11,7 @@ export abstract class ServiceProviderValidationErrors {
     public static readonly THE_ONLY_MASTER_IN_SERVICE_PROVIDER: string = 'THE_ONLY_MASTER_IN_SERVICE_PROVIDER';
     public static readonly USER_DO_NOT_WORK_IN_SERVICE_PROVIDER: string = 'USER_DO_NOT_WORK_IN_SERVICE_PROVIDER';
     public static readonly EXCEED_MAXIMUM_SERVICE_PROVIDERS_NUMBER: string = 'EXCEED_MAXIMUM_SERVICE_PROVIDERS_NUMBER';
+    public static readonly CAN_NOT_REMOVE_USER_FROM_SERVICE_PROVIDER: string = 'CAN_NOT_REMOVE_USER_FROM_SERVICE_PROVIDER';
 }
 
 export abstract class ServiceProviderValidationCases {
@@ -18,6 +19,7 @@ export abstract class ServiceProviderValidationCases {
     public static readonly NOT_THE_ONLY_MASTER_IN_SERVICE_PROVIDER: string = 'NOT_THE_ONLY_MASTER_IN_SERVICE_PROVIDER';
     public static readonly USER_WORKS_IN_SERVICE_PROVIDER: string = 'USER_WORKS_IN_SERVICE_PROVIDER';
     public static readonly NOT_EXCEED_MAXIMUM_SERVICE_PROVIDERS_NUMBER: string = 'NOT_EXCEED_MAXIMUM_SERVICE_PROVIDERS_NUMBER';
+    public static readonly CAN_REMOVE_USER_FROM_SERVICE_PROVIDER: string = 'CAN_REMOVE_USER_FROM_SERVICE_PROVIDER';
 }
 
 export abstract class ServiceProviderErrorMessages {
@@ -25,4 +27,5 @@ export abstract class ServiceProviderErrorMessages {
     public static readonly THE_ONLY_MASTER_IN_SERVICE_PROVIDER: string = 'you are the only master in the service provider!';
     public static readonly USER_DO_NOT_WORK_IN_SERVICE_PROVIDER: string = 'this user do not work in service provider!';
     public static readonly EXCEED_MAXIMUM_SERVICE_PROVIDERS_NUMBER: string = 'you have exceeded the allowed number of service providers for the same master user.';
+    public static readonly CAN_NOT_REMOVE_USER_FROM_SERVICE_PROVIDER: string = 'user can not be removed from service provider. maybe he is the only master user in service provider, or you are trying to remove a master or sub-master user.';
 }

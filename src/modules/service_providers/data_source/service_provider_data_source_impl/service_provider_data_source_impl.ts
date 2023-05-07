@@ -21,36 +21,105 @@ import { UserServiceProviderRole } from 'src/data/database/models/user_service_p
 import { UserBranch } from 'src/data/database/models/user_branch';
 import { PermissionGroup } from 'src/data/database/models/permission_group';
 import { Permission } from 'src/data/database/models/permission';
+import { HiringRequest } from 'src/data/database/models/hiring_request';
 
 @Injectable()
 export class ServiceProviderDataSourceImpl extends CoreDataSourceImpl implements ServiceProviderDataSource {
     constructor(private readonly database: Db, private readonly serviceProviderValidatorsWrapper: ServiceProviderValidatorsWrapper) {
         super()
     }
+    addMasterUser(param: BaseParam<any>): Promise<BaseUpdateResponse> {
+        return this.serviceProviderValidatorsWrapper.validate<BaseCreateResponse, CreateServiceProviderDTO>(param, () => {
+            return new Promise<BaseCreateResponse>(async (resolve, reject) => {
+                try {
+                    let addSubMasterUserrQueryParams = param.getQueryParam();
+                    await UserServiceProviderRole.update(
+                        {
+                            role: 'master'
+                        },
+                        {
+                            where:
+                            {
+                                userId: addSubMasterUserrQueryParams['userId'],
+                                serviceProviderId: addSubMasterUserrQueryParams['serviceProviderId']
+                            }
+                        })
+                    resolve(BaseUpdateResponse.build(1, [CUDResponseObjects.serviceProvider]));
+                } catch (err) {
+                    reject(err)
+                }
+            });
+
+        },
+            [
+                ServiceProviderValidationCases.IS_MASTER,
+            ])
+    }
+
+
+    giveUpMasterRole(param: BaseParam<any>): Promise<BaseUpdateResponse> {
+        return this.serviceProviderValidatorsWrapper.validate<BaseCreateResponse, CreateServiceProviderDTO>(param, () => {
+            return new Promise<BaseCreateResponse>(async (resolve, reject) => {
+                try {
+                    let addSubMasterUserrQueryParams = param.getQueryParam();
+                    await UserServiceProviderRole.update(
+                        {
+                            role: 'sub-master'
+                        },
+                        {
+                            where:
+                            {
+                                userId: addSubMasterUserrQueryParams['userId'],
+                                serviceProviderId: addSubMasterUserrQueryParams['serviceProviderId']
+                            }
+                        })
+                    resolve(BaseUpdateResponse.build(1, [CUDResponseObjects.serviceProvider]));
+                } catch (err) {
+                    reject(err)
+                }
+            });
+
+        },
+            [
+                ServiceProviderValidationCases.IS_MASTER,
+                ServiceProviderValidationCases.NOT_THE_ONLY_MASTER_IN_SERVICE_PROVIDER,
+            ])
+    }
+
+
     createServiceProvider(param: BaseParam<CreateServiceProviderDTO>): Promise<BaseCreateResponse> {
         return this.serviceProviderValidatorsWrapper.validate<BaseCreateResponse, CreateServiceProviderDTO>(param, () => {
             return new Promise<BaseCreateResponse>(async (resolve, reject) => {
                 try {
                     let createServiceProviderDTO = param.getData();
-                    const serviceProvider = await ServiceProvider.create(createServiceProviderDTO.serviceProvider);
+                    let createServiceProviderMetaData = param.getMetaData();
+                    const serviceProvider = await ServiceProvider.create({
+                        name: createServiceProviderDTO.serviceProvider.name
+                    });
                     var brancheEntities: BranchEntity[] = createServiceProviderDTO.branches;
-                    brancheEntities.map((branch, _, __) => branch.serviceProviderId = serviceProvider.id)
+                    let branchesData = brancheEntities.map((branch, _, __) => {
+                        return {
+                            serviceProviderId: serviceProvider.id,
+                            name: branch.name
+                            // or any other attributes...
+                        }
+                    })
                     await UserServiceProviderRole.create({
-                        userId: createServiceProviderDTO.userId,
+                        userId: createServiceProviderMetaData.userId,
                         serviceProviderId: serviceProvider.id, role: 'master'
                     })   // TO DO optional : make it enum
                     // TO DO optional find away to explicitly specify what attributes to map
-                    const branches = await Branch.bulkCreate(brancheEntities)
+                    const branches = await Branch.bulkCreate(branchesData)
                     var userBranches = [];
                     for (var i = 0; i < branches.length; i++) {
                         userBranches.push({
                             name: 'arbit',
-                            userId: createServiceProviderDTO.userId,
+                            userId: createServiceProviderMetaData.userId,
                             branchId: branches[i].id
                         })
                     }
                     await UserBranch.bulkCreate(userBranches)
-                    resolve(BaseCreateResponse.build(serviceProvider.id, CUDResponseObjects.serviceProvider));
+                    resolve(BaseCreateResponse.build(serviceProvider.id, [CUDResponseObjects.serviceProvider]));
                 } catch (err) {
                     reject(err)
                 }
@@ -105,25 +174,28 @@ export class ServiceProviderDataSourceImpl extends CoreDataSourceImpl implements
         },
             [])
     }
-    removeUsersFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<BaseDeleteResponse> {
+    removeUserFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<BaseDeleteResponse> {
         return this.serviceProviderValidatorsWrapper.validate<BaseDeleteResponse, RemoveUsersFromServiceProviderDTO>(param, () => {
             return new Promise<BaseDeleteResponse>(async (resolve, reject) => {
                 try {
-                    let removeUsersFromServiceProviderPathParams = param.getPathParam();
-                    let removeUsersFromServiceProviderPathData = param.getData();
+                    let removeUsersFromServiceProviderQueryParams = param.getQueryParam();
+                    let removeUsersFromServiceProviderData = param.getData();
                     let branches = await Branch.findAll({
                         where:
                         {
-                            serviceProviderId: removeUsersFromServiceProviderPathParams['serviceProviderId']
+                            serviceProviderId: removeUsersFromServiceProviderQueryParams['serviceProviderId']
                         }
                     })
                     await UserBranch.destroy({
-                        where: { userId: removeUsersFromServiceProviderPathData.users, branchId: branches.map((branch) => branch.id) }
+                        where: {
+                            userId: removeUsersFromServiceProviderData.user,
+                            branchId: branches.map((branch) => branch.id)
+                        }
                     })
                     await UserServiceProviderRole.destroy({
                         where: {
-                            userId: removeUsersFromServiceProviderPathData.users,
-                            serviceProviderId: removeUsersFromServiceProviderPathParams['serviceProviderId']
+                            userId: removeUsersFromServiceProviderData.user,
+                            serviceProviderId: removeUsersFromServiceProviderQueryParams['serviceProviderId']
                         }
                     })
                     let permissionGroups = await PermissionGroup.findAll({
@@ -135,11 +207,17 @@ export class ServiceProviderDataSourceImpl extends CoreDataSourceImpl implements
                     await Permission.destroy({
                         where:
                         {
-                            userId: removeUsersFromServiceProviderPathData.users, permissionGroupId: permissionGroups.map((PermissionGroup) => PermissionGroup.id)
+                            userId: removeUsersFromServiceProviderData.user,
+                            permissionGroupId: permissionGroups.map((PermissionGroup) => PermissionGroup.id)
                         }
                     })
-                    // remove his accepted hiring request,so that he can send new one
-                    resolve(BaseDeleteResponse.build(1, CUDResponseObjects.comment));
+                    await HiringRequest.destroy({
+                        where: {
+                            userId: removeUsersFromServiceProviderData.user,
+                            serviceProviderId: removeUsersFromServiceProviderQueryParams['serviceProviderId']
+                        }
+                    })
+                    resolve(BaseDeleteResponse.build(1, [CUDResponseObjects.serviceProvider]));
                 } catch (err) {
                     reject(err)
                 }
@@ -147,8 +225,9 @@ export class ServiceProviderDataSourceImpl extends CoreDataSourceImpl implements
 
         },
             [
-                ServiceProviderValidationCases.USER_WORKS_IN_SERVICE_PROVIDER,
-                CoreValidationCases.MASTER_OR_SUBMASTER
+                // CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER,
+                // CoreValidationCases.MASTER_OR_SUBMASTER
+                ServiceProviderValidationCases.CAN_REMOVE_USER_FROM_SERVICE_PROVIDER
             ])
     }
     addSubMasterUser(param: BaseParam<any>): Promise<BaseUpdateResponse> {
@@ -167,7 +246,7 @@ export class ServiceProviderDataSourceImpl extends CoreDataSourceImpl implements
                                 serviceProviderId: addSubMasterUserrQueryParams['serviceProviderId']
                             }
                         })
-                    resolve(BaseUpdateResponse.build(1, CUDResponseObjects.comment));
+                    resolve(BaseUpdateResponse.build(1, [CUDResponseObjects.serviceProvider]));
                 } catch (err) {
                     reject(err)
                 }
@@ -195,7 +274,7 @@ export class ServiceProviderDataSourceImpl extends CoreDataSourceImpl implements
                             }
                         })
 
-                    resolve(BaseUpdateResponse.build(1, CUDResponseObjects.comment));
+                    resolve(BaseUpdateResponse.build(1, [CUDResponseObjects.serviceProvider]));
                 } catch (err) {
                     reject(err)
                 }

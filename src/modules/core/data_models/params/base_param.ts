@@ -21,11 +21,17 @@ export class BaseParam<T extends BaseDTO>{
 
     static build<T extends BaseDTO>(options: {
         data: T,
-        metaData: Metadata,
+        // metaData: Metadata,                      // temporary
+        obj: any,                                // temporary
         queryParam: Map<string, any>,
         pathParam: Map<string, any>
     }): BaseParam<T> {
-        return new BaseParam(options.data, options.metaData, options.queryParam, options.pathParam);
+        return new BaseParam(
+            options.data,
+            //options.metaData,                     // temporary
+            new Metadata(options.obj),              // temporary
+            options.queryParam,
+            options.pathParam);
     }
 
     setData(data: T) {
@@ -65,4 +71,10 @@ export class BaseParam<T extends BaseDTO>{
 class Metadata {
     userId: number;
     userRoles: UserRole[]
+    request: any;
+
+    constructor(request: Object) {
+        this.userId = 10;              // temporary
+        this.request = request;
+    }
 }

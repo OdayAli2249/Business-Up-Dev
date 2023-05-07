@@ -18,6 +18,9 @@ import { UpdateServiceDTO } from '../../services/data_models/dtos/update_service
 @Controller('content')
 export class ContentController {
 
+// TO DO test the cascading on delete for all entities/tables that may references a content
+// because this has not manually done
+
     constructor(
         private readonly contentService: ContentService) { }
 

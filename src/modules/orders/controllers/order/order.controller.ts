@@ -48,7 +48,7 @@ export class OrderController {
         });
     }
 
-    @Get('get/:orderId')
+    @Get('get-items/:orderId')
     getOrderItems(@Param('orderId') orderId: number): Promise<BaseReadResponse<OrderItemEntity> | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.orderService.getOrderItems(orderId as number));

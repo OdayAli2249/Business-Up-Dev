@@ -1,9 +1,6 @@
-import { Association, CreationOptional, DataTypes, ForeignKey, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, InferAttributes, InferCreationAttributes, Model, NonAttribute, Sequelize } from "sequelize";
-import { ForeignKeys, ModelsName, TablesName } from "../helpers/constants";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model, NonAttribute, Sequelize } from "sequelize";
+import { TablesName } from "../helpers/constants";
 import { BaseModel } from "./base_model/base_model";
-import { Post } from "./post";
-import { Reply } from "./reply";
-import { Service } from "./service";
 import { ServiceProvider } from "./service_provider";
 import { User } from "./user";
 

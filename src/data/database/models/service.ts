@@ -84,12 +84,12 @@ class Service extends Model<InferAttributes<Service, { omit: 'comments' | 'react
     }
 
     static associate(models: Map<string, BaseModel>) {
-        Service.belongsTo(models[ModelsName.BRANCHES], { foreignKey: ForeignKeys.BRANCHE });
-        Service.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER });
-        Service.hasMany(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.SERVICE });
-        Service.hasMany(models[ModelsName.REACTIONS], { foreignKey: ForeignKeys.SERVICE });
-        Service.hasMany(models[ModelsName.ORDER_ITEMS], { foreignKey: ForeignKeys.SERVICE });
-        Service.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.SERVICE });
+        Service.belongsTo(models[ModelsName.BRANCHES], { foreignKey: ForeignKeys.BRANCHE, onDelete: 'CASCADE' });
+        Service.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        Service.hasMany(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.SERVICE, onDelete: 'CASCADE' });
+        Service.hasMany(models[ModelsName.REACTIONS], { foreignKey: ForeignKeys.SERVICE, onDelete: 'CASCADE' });
+        Service.hasMany(models[ModelsName.ORDER_ITEMS], { foreignKey: ForeignKeys.SERVICE, onDelete: 'CASCADE' });
+        Service.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.SERVICE, onDelete: 'CASCADE' });
     }
 }
 

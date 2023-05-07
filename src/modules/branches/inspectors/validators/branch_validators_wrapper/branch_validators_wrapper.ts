@@ -26,38 +26,37 @@ export class BranchValidatorsWrapper extends CoreValidatorsWrapper {
                         break;
                     }
                     case BranchValidationCases.SOURCE_AND_TARGET_USERS_SEPARATED: {
-                        let paramtemp = (param as unknown) as BaseParam<BranchesWithUsersDTO>;
-                        if (paramtemp instanceof BaseParam<BranchesWithUsersDTO>) {
-                            console.log('||||||||||||||||||||||| yes');    // enters here in testing
-                        } else {
-                            console.log('||||||||||||||||||||||| no');
-                        }
-                        result = /* (param.getData() instanceof BranchesWithUsersDTO) ? */   // not true in testing
-                            await this.branchValidator.noSourceAndTargetUsersIntersection(paramtemp)
-                        /*  : ValidationResult.buildDefault(); */  // check if this will work
+                        result = await this.branchValidator.noSourceAndTargetUsersIntersection(
+                            (param as unknown) as BaseParam<BranchesWithUsersDTO>
+                        )
+
                         resolve(result);
                         break;
                     }
                     case BranchValidationCases.USERS_ARE_IN_THEIR_CORRECT_BRANCHES: {
-
-                        result = (param.getData() instanceof BranchesWithUsersDTO) ?
-                            await this.branchValidator.usersAreInTheirCorrectBranches((param as unknown) as BaseParam<BranchesWithUsersDTO>)
-                            : ValidationResult.buildDefault();   // check if this will work
+                        result = await this.branchValidator.usersAreInTheirCorrectBranches(
+                            (param as unknown) as BaseParam<BranchesWithUsersDTO>
+                        )
                         resolve(result);
                         break;
                     }
                     case BranchValidationCases.USERS_ARE_NEW_TO_SERVICE_PROVIDER: {
-                        result = await this.branchValidator.isUsersNewToServiceProvider(param);
+                        result = await this.branchValidator.isUsersNewToServiceProvider(
+                            (param as unknown) as BaseParam<AddNewUsersToBranchDTO>
+                        );
                         resolve(result);
                         break;
                     }
                     case BranchValidationCases.USERS_IN_PENDING_HIRING_REQUESTS: {
-                        result = (param.getData() instanceof AddNewUsersToBranchDTO) ?
-                            await this.branchValidator.isUsersInPendingHiringRequests((param as unknown) as BaseParam<AddNewUsersToBranchDTO>)
-                            : ValidationResult.buildDefault();   // check if this will work
+                        result = await this.branchValidator.isUsersInPendingHiringRequests(
+                            (param as unknown) as BaseParam<AddNewUsersToBranchDTO>
+                        );
+
                         resolve(result);
                         break;
                     }
+                    // TO DO validate:  1- BranchValidationCases.NO_MASTER_OR_SUB_MASTER_USERS_IN_SOURCE_BRANCHES,
+                    //                  2- BranchValidationCases.NO_USERS_WILL_BE_REMOVED_FROM_ENTIRE_SERVICE_PROVIDER
                     default: {
                         result = await this.checkForCore(validationCase, param);
                         resolve(result);
@@ -66,9 +65,10 @@ export class BranchValidatorsWrapper extends CoreValidatorsWrapper {
                 }
             } catch (err) {
                 // resolve for database errors from validations
+                // or type parsing error
+                // but for now, we consider both as database error
                 resolve(ValidationResult.buildDatabaseError())
             }
         });
-
     }
 }

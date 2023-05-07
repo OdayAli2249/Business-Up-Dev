@@ -4,12 +4,13 @@ import { BaseCUDResponse } from "./base_cud_response";
 
 export class BaseCreateResponse extends BaseCUDResponse {
 
-    private constructor(id: number, cudResponseObjects: CUDResponseObjects) {
+    private constructor(id: number, cudResponseObjects: string[]) {
         super(id, cudResponseObjects);
         BaseCreateResponse.templateMessage = CUDResponseTemplateMessages.CREATE_TEMPLATE_MESSAGE;
+        this.operation = BaseCreateResponse.templateMessage;
     }
 
-    static build(id: number, cudResponseObjects: CUDResponseObjects): BaseCreateResponse {
+    static build(id: number, cudResponseObjects: string[]): BaseCreateResponse {
         return new BaseCreateResponse(id, cudResponseObjects);
     }
 }

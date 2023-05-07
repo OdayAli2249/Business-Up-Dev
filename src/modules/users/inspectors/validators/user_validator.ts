@@ -6,4 +6,6 @@ export abstract class UserValidator {
 
         abstract isUpdateProfileTimeStampAuthorized(param: BaseParam<UpdateUserDTO>): Promise<ValidationResult>;
 
+        abstract canDeleteUser(param: BaseParam<any>): Promise<ValidationResult>;
+
 }

@@ -22,7 +22,8 @@ export class UserService {
             pathParam: null,
             queryParam: null,
             data: createUserDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -36,7 +37,8 @@ export class UserService {
             pathParam: null,
             queryParam: null,
             data: updateUserDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -51,7 +53,8 @@ export class UserService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -67,7 +70,8 @@ export class UserService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<UserEntity>>;

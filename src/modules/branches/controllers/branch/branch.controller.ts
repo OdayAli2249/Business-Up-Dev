@@ -31,18 +31,16 @@ export class BranchController {
         });
     }
 
-    @Post('add-new-users-to-branch/service-provider/:serviceProviderId/branch/:branchId')
+    @Post('add-new-users-to-branch/:branchId')
     addNewUsersToBranch(@Body() createCustomerDto: AddNewUsersToBranchDTO,
-        @Param('serviceProviderId') serviceProviderId: number,        // this may should be string
         @Param('branchId') branchId: number): Promise<BaseCreateResponse | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.branchService.addNewUsersToBranch(createCustomerDto,
-                serviceProviderId as number,
                 branchId as number));
         });
     }
 
-    @Post('add-existred-users-to-branch')
+    @Put('add-existred-users-to-branch')
     addExistedUsersToBranch(@Body() createCustomerDto: BranchesWithUsersDTO)
         : Promise<BaseCreateResponse | Failure> {
         return new Promise(async (resolve, _) => {

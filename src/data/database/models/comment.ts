@@ -57,15 +57,16 @@ class Comment extends Model<InferAttributes<Comment, { omit: 'replies' }>, Infer
     }
 
     static associate(models: Map<string, BaseModel>) {
-        Comment.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER });
-        Comment.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        Comment.belongsTo(models[ModelsName.POSTS], { foreignKey: ForeignKeys.POST });
-        Comment.belongsTo(models[ModelsName.SERVICES], { foreignKey: ForeignKeys.SERVICE });
+        Comment.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        Comment.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        Comment.belongsTo(models[ModelsName.POSTS], { foreignKey: ForeignKeys.POST, onDelete: 'CASCADE' });
+        Comment.belongsTo(models[ModelsName.SERVICES], { foreignKey: ForeignKeys.SERVICE, onDelete: 'CASCADE' });
         Comment.hasMany(models[ModelsName.REPLIES], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.COMMENT
-            }
+            },
+            onDelete: 'CASCADE'
         });
     }
 }

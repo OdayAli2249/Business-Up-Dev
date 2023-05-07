@@ -11,6 +11,9 @@ export class UserHandlersWrapper extends CoreHandlersWrapper {
             case UserValidationErrors.UPDATE_PROFILE_TIME_STAMP_NOT_AUTHORIZED: {
                 return this.createErrorObject(UserErrorMesssages.UPDATE_PROFILE_TIME_STAMP_NOT_AUTHORIZED, validationResult, failure);
             }
+            case UserValidationErrors.CAN_NOT_DELETE_USER: {
+                return this.createErrorObject(UserErrorMesssages.CAN_NOT_DELETE_USER, validationResult, failure);
+            }
             default: {
                 return this.handleCoreError(validationResult, failure);
             }

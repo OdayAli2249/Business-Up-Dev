@@ -11,6 +11,11 @@ export class UserValidatorImpl extends CoreValidatorImpl implements UserValidato
     constructor(private readonly database: Db) {
         super()
     }
+    canDeleteUser(param: BaseParam<any>): Promise<ValidationResult> {
+        return new Promise(async (resolve, _) => {
+            resolve(ValidationResult.buildSuccess())
+        });
+    }
     isUpdateProfileTimeStampAuthorized(param: BaseParam<UpdateUserDTO>): Promise<ValidationResult> {
         return new Promise(async (resolve, _) => {
             // there are no restrictions on user update for now, maybe will be in future 

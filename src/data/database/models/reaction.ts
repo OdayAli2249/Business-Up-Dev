@@ -39,10 +39,10 @@ class Reaction extends Model<InferAttributes<Reaction>, InferCreationAttributes<
     }
 
     static associate(models: Map<string, BaseModel>) {
-        Reaction.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER });
-        Reaction.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER });
-        Reaction.belongsTo(models[ModelsName.POSTS], { foreignKey: ForeignKeys.POST });
-        Reaction.belongsTo(models[ModelsName.SERVICES], { foreignKey: ForeignKeys.SERVICE });
+        Reaction.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        Reaction.belongsTo(models[ModelsName.SERVICE_PROVIDERS], { foreignKey: ForeignKeys.SERVICE_PROVIDER, onDelete: 'CASCADE' });
+        Reaction.belongsTo(models[ModelsName.POSTS], { foreignKey: ForeignKeys.POST, onDelete: 'CASCADE' });
+        Reaction.belongsTo(models[ModelsName.SERVICES], { foreignKey: ForeignKeys.SERVICE, onDelete: 'CASCADE' });
     }
 }
 

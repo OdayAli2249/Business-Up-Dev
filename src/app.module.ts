@@ -7,10 +7,9 @@ import { ContentModule } from './modules/content/content.module';
 import { HiringRequestsModule } from './modules/hiring_requests/hiring_requests.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { InteractionsModule } from './modules/interactions/interactions.module';
-import { ServicesService } from './modules/user/services/services.service';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [BranchesModule, ContentModule, InteractionsModule, OrdersModule, ServiceProvidersModule, SubscribtionsModule, HiringRequestsModule, PermissionsModule],
-  providers: [ServicesService],
+  imports: [BranchesModule, ContentModule, InteractionsModule, HiringRequestsModule, OrdersModule, ServiceProvidersModule, SubscribtionsModule, PermissionsModule, UsersModule],
 })
 export class AppModule { }

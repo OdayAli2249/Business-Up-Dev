@@ -13,6 +13,7 @@ import { UpdateCommentDTO } from '../../comments/data_models/dtos/update_comment
 import { CreateReactionDTO } from '../../reactions/data_models/dtos/create_reaction_dto';
 import { UpdateReactionDTO } from '../../reactions/data_models/dtos/update_reaction_dto';
 import { CreateReplyDTO } from '../../replies/data_models/dtos/create_reply_dto';
+import { UpdateReplyDTO } from '../../replies/data_models/dtos/update_reply_dto';
 
 @Controller('interaction')
 export class InteractionController {
@@ -21,7 +22,7 @@ export class InteractionController {
         private readonly interactionService: InteractionService) { }
 
 
-    @Post('create')
+    @Post('comment/create')
     createComment(@Body() createCommentDTO: CreateCommentDTO,
         @Query('serviceProviderId') serviceProviderId: number,
         @Query('serviceId') serviceId: number,
@@ -35,7 +36,7 @@ export class InteractionController {
         });
     }
 
-    @Put('update/:commentId')
+    @Put('comment/update/:commentId')
     updateComment(@Body() updateCommentDTO: UpdateCommentDTO, @Param('commentId') commentId: number)
         : Promise<BaseUpdateResponse | Failure> {
         return new Promise(async (resolve, _) => {
@@ -43,7 +44,7 @@ export class InteractionController {
         });
     }
 
-    @Delete('cancel/:commentId')
+    @Delete('comment/delete/:commentId')
     deleteComment(@Param('commentId') commentId: number)
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {
@@ -51,7 +52,7 @@ export class InteractionController {
         });
     }
 
-    @Get('get')
+    @Get('comment/get')
     getComments(
         @Query('serviceId') serviceId: number,
         @Query('postId') postId: number): Promise<BaseReadResponse<CommentEntity> | Failure> {
@@ -60,7 +61,7 @@ export class InteractionController {
         });
     }
 
-    @Post('create')
+    @Post('reaction/create')
     createReaction(@Body() createReactionDTO: CreateReactionDTO,
         @Query('serviceProviderId') serviceProviderId: number,
         @Query('serviceId') serviceId: number,
@@ -75,7 +76,7 @@ export class InteractionController {
         });
     }
 
-    @Put('update/:reactionId')
+    @Put('reaction/update/:reactionId')
     updateReaction(@Body() updateReactionDTO: UpdateReactionDTO,
         @Param('reactionId') reactionId: number)
         : Promise<BaseUpdateResponse | Failure> {
@@ -84,7 +85,7 @@ export class InteractionController {
         });
     }
 
-    @Delete('cancel')
+    @Delete('reaction/delete/:reactionId')
     deleteReaction(@Param('reactionId') reactionId)
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {
@@ -92,7 +93,7 @@ export class InteractionController {
         });
     }
 
-    @Get('get')
+    @Get('reaction/get')
     getReactions(
         @Query('serviceId') serviceId: number,
         @Query('postId') postId: number
@@ -104,7 +105,7 @@ export class InteractionController {
         });
     }
 
-    @Post('create')
+    @Post('reply/create')
     createReply(@Body() createReplyDTO: CreateReplyDTO,
         @Query('commentId') commentId: number,
         @Query('serviceProviderId') serviceProviderId: number)
@@ -117,15 +118,16 @@ export class InteractionController {
         });
     }
 
-    @Put('update/:replyId')
-    updateReply(@Param() replyId: number)
+    @Put('reply/update/:replyId')
+    updateReply(@Body() updateReplyDTO: UpdateReplyDTO,
+        @Param('replyId') replyId: number)
         : Promise<BaseUpdateResponse | Failure> {
         return new Promise(async (resolve, _) => {
-            resolve(await this.interactionService.updateReply(replyId as number));
+            resolve(await this.interactionService.updateReply(updateReplyDTO, replyId as number));
         });
     }
 
-    @Delete('cancel/:replyId')
+    @Delete('reply/delete/:replyId')
     deleteReply(@Param('replyId') replyId)
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {
@@ -133,7 +135,7 @@ export class InteractionController {
         });
     }
 
-    @Get('get/:commentId')
+    @Get('reply/get/:commentId')
     getReplies(@Param('commentId') commentId): Promise<BaseReadResponse<ReplyEntity> | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.interactionService.getReplies(commentId as number));

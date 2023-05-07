@@ -16,6 +16,7 @@ import { ReplyEntity } from '../../replies/data_models/entities/reply_entity';
 import { CreateCommentDTO } from '../../comments/data_models/dtos/create_comment_dto';
 import { UpdateCommentDTO } from '../../comments/data_models/dtos/update_comment_dto';
 import { UpdateReactionDTO } from '../../reactions/data_models/dtos/update_reaction_dto';
+import { UpdateReplyDTO } from '../../replies/data_models/dtos/update_reply_dto';
 
 @Injectable()
 export class InteractionService {
@@ -36,8 +37,9 @@ export class InteractionService {
         let param: BaseParam<any> = BaseParam.build({
             pathParam: null,
             queryParam: queryParam,
-            data: null,
-            metaData: null
+            data: createCommentDTO,
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -53,7 +55,8 @@ export class InteractionService {
             pathParam: pathParam,
             queryParam: null,
             data: updateCommentDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -69,7 +72,8 @@ export class InteractionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -87,7 +91,8 @@ export class InteractionService {
             pathParam: null,
             queryParam: queryParam,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<CommentEntity>>;
@@ -110,7 +115,8 @@ export class InteractionService {
             pathParam: null,
             queryParam: queryParam,
             data: createReactionDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -126,7 +132,8 @@ export class InteractionService {
             pathParam: pathParam,
             queryParam: null,
             data: updateReactionDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -142,7 +149,8 @@ export class InteractionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -162,7 +170,8 @@ export class InteractionService {
             pathParam: null,
             queryParam: queryParam,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ReactionEntity>>;
@@ -183,7 +192,8 @@ export class InteractionService {
             pathParam: null,
             queryParam: queryParam,
             data: createReplyDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -192,14 +202,15 @@ export class InteractionService {
         });
     }
 
-    updateReply(replyId: number): Promise<BaseUpdateResponse | Failure> {
+    updateReply(updateReplyDTO: UpdateReplyDTO, replyId: number): Promise<BaseUpdateResponse | Failure> {
         let pathParam = new Map<string, any>();
-        pathParam['replyId'] = 'replyId';
+        pathParam['replyId'] = replyId;
         let param: BaseParam<any> = BaseParam.build({
             pathParam: pathParam,
             queryParam: null,
-            data: null,
-            metaData: null
+            data: updateReplyDTO,
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -215,7 +226,8 @@ export class InteractionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -232,7 +244,8 @@ export class InteractionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ReplyEntity>>;

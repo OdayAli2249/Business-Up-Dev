@@ -57,12 +57,12 @@ export class ServiceProviderRepositoryImpl extends CoreRepositoryImpl implements
             })
         })
     }
-    removeUsersFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<FailureOr<BaseDeleteResponse>> {
+    removeUserFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<FailureOr<BaseDeleteResponse>> {
         return this.serviceProviderHandlersWrapper.handle(param, () => {
             return new Promise(async (resolve, reject) => {
                 let response: BaseDeleteResponse;
                 try {
-                    response = await this.serviceProviderDataSource.removeUsersFromServiceProvider(param);
+                    response = await this.serviceProviderDataSource.removeUserFromServiceProvider(param);
                     resolve(response);
                 } catch (err) {
                     reject(err);

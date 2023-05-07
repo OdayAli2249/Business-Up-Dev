@@ -16,7 +16,7 @@ export abstract class ServiceProviderRepository {
 
     abstract geteUserServiceProviders(param: BaseParam<any>): Promise<FailureOr<BaseReadResponse<ServiceProviderEntity>>>
 
-    abstract removeUsersFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<FailureOr<BaseDeleteResponse>>
+    abstract removeUserFromServiceProvider(param: BaseParam<RemoveUsersFromServiceProviderDTO>): Promise<FailureOr<BaseDeleteResponse>>
 
     abstract addSubMasterUser(param: BaseParam<any>): Promise<FailureOr<BaseUpdateResponse>>
 

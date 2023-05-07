@@ -14,7 +14,7 @@ export class HiringRequestController {
         private readonly hiringRequestService: HiringRequestService) { }
 
     @Post('create/:serviceProviderId')
-    createHiringRequest(@Param() serviceProviderId: number)
+    createHiringRequest(@Param('serviceProviderId') serviceProviderId: number)
         : Promise<BaseCreateResponse | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.hiringRequestService.createHiringRequest(serviceProviderId as number));
@@ -22,7 +22,7 @@ export class HiringRequestController {
     }
 
     @Put('reject/:hiringRequestId')
-    rejectHiringRequest(@Param() hiringRequestId: number)
+    rejectHiringRequest(@Param('hiringRequestId') hiringRequestId: number)
         : Promise<BaseUpdateResponse | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.hiringRequestService.rejectHiringRequest(hiringRequestId as number));
@@ -30,7 +30,7 @@ export class HiringRequestController {
     }
 
     @Delete('cancel/:hiringRequestId')
-    cancelHiringRequest(@Param() hiringRequestId: number)
+    cancelHiringRequest(@Param('hiringRequestId') hiringRequestId: number)
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.hiringRequestService.cancelHiringRequest(hiringRequestId as number));
@@ -45,7 +45,7 @@ export class HiringRequestController {
     }
 
     @Get('get-pending/:serviceProviderId')
-    getPendingServiceProvidertHiringRequest(serviceProviderId: number): Promise<BaseReadResponse<HiringRequestEntity> | Failure> {
+    getPendingServiceProvidertHiringRequest(@Param('serviceProviderId') serviceProviderId: number): Promise<BaseReadResponse<HiringRequestEntity> | Failure> {
         return new Promise(async (resolve, _) => {
             resolve(await this.hiringRequestService.getPendingServiceProvidertHiringRequest(serviceProviderId as number));
         });

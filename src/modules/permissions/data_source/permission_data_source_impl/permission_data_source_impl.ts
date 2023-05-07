@@ -48,12 +48,12 @@ export class PermissionDataSourceImpl extends CoreDataSourceImpl implements Perm
                                 })
                             }
                         }
-                    if (createPermissionGroupData.permissionGroup.postIds)
-                        for (var i = 0; i < createPermissionGroupData.permissionGroup.postIds.length; i++) {
+                    if (createPermissionGroupData.permissionGroup.serviceIds)
+                        for (var i = 0; i < createPermissionGroupData.permissionGroup.serviceIds.length; i++) {
                             for (var j = 0; j < createPermissionGroupData.permissionGroup.userIds.length; j++) {
                                 permissions.push({
                                     name: 'arbit',
-                                    serviceId: createPermissionGroupData.permissionGroup.postIds[i],
+                                    serviceId: createPermissionGroupData.permissionGroup.serviceIds[i],
                                     userId: createPermissionGroupData.permissionGroup.userIds[j],
                                     permissionGroupId: permissionGroup.id,
                                     actions: createPermissionGroupData.permissionGroup.actions
@@ -73,7 +73,7 @@ export class PermissionDataSourceImpl extends CoreDataSourceImpl implements Perm
                             }
                         }
                     await Permission.bulkCreate(permissions)
-                    resolve(BaseCreateResponse.build(permissionGroup.id, CUDResponseObjects.permissionGroup));
+                    resolve(BaseCreateResponse.build(permissionGroup.id, [CUDResponseObjects.permissionGroup]));
                 } catch (err) {
                     reject(err)
                 }
@@ -149,7 +149,7 @@ export class PermissionDataSourceImpl extends CoreDataSourceImpl implements Perm
                             }
                         await Permission.bulkCreate(permissions)
                     }
-                    resolve(BaseUpdateResponse.build(updatePermissionGroupPathparam['permissionGroupId'], CUDResponseObjects.permissionGroup));
+                    resolve(BaseUpdateResponse.build(updatePermissionGroupPathparam['permissionGroupId'], [CUDResponseObjects.permissionGroup]));
                 } catch (err) {
                     reject(err)
                 }
@@ -168,8 +168,8 @@ export class PermissionDataSourceImpl extends CoreDataSourceImpl implements Perm
                 try {
                     let deletePermissionGroupPathParam = param.getPathParam();
                     await PermissionGroup.destroy({ where: { id: deletePermissionGroupPathParam['permissionGroupId'] } })
-                    await Permission.destroy({ where: { permissionGroupId: deletePermissionGroupPathParam['permissionGroupId'] } })
-                    resolve(BaseDeleteResponse.build(deletePermissionGroupPathParam['permissionGroupId'], CUDResponseObjects.permissionGroup));
+                    // await Permission.destroy({ where: { permissionGroupId: deletePermissionGroupPathParam['permissionGroupId'] } })
+                    resolve(BaseDeleteResponse.build(deletePermissionGroupPathParam['permissionGroupId'], [CUDResponseObjects.permissionGroup]));
                 } catch (err) {
                     reject(err)
                 }
@@ -177,7 +177,6 @@ export class PermissionDataSourceImpl extends CoreDataSourceImpl implements Perm
 
         },
             [
-                PermissionGroupValidationCases.RESOURCES_ARE_IN_THEIR_CORRECT_BRANCHES,
                 PermissionGroupValidationCases.NO_TEMPORARY_CUD_OPERATIONS_DENY,
                 CoreValidationCases.MASTER_OR_SUBMASTER
             ])

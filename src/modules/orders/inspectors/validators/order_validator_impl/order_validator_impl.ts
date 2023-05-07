@@ -20,13 +20,13 @@ export class OrderValidatorImpl extends CoreValidatorImpl implements OrderValida
     }
     canUpdateOrder(param: BaseParam<UpdateOrderDTO>): Promise<ValidationResult> {
         return new Promise(async (resolve, _) => {
-            // there are no restrictions on temporary order update now, maybe will be in future
+            // we should check if the user trying to update this order is the owner.
             resolve(ValidationResult.buildSuccess())
         });
     }
     canCancelOrder(param: BaseParam<any>): Promise<ValidationResult> {
         return new Promise(async (resolve, _) => {
-            // there are no restrictions on temporary order cancel now, maybe will be in future
+            // we should check if the user trying to cancel this order is the owner.
             resolve(ValidationResult.buildSuccess())
         });
     }

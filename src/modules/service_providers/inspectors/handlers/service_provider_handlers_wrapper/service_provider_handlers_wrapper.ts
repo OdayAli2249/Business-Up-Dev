@@ -21,6 +21,10 @@ export class ServiceProviderHandlersWrapper extends CoreHandlersWrapper {
             case ServiceProviderValidationErrors.USER_DO_NOT_WORK_IN_SERVICE_PROVIDER: {
                 return this.createErrorObject(ServiceProviderErrorMessages.USER_DO_NOT_WORK_IN_SERVICE_PROVIDER, validationResult, failure);
             }
+            case ServiceProviderValidationErrors.CAN_NOT_REMOVE_USER_FROM_SERVICE_PROVIDER: {
+                return this.createErrorObject(ServiceProviderErrorMessages.CAN_NOT_REMOVE_USER_FROM_SERVICE_PROVIDER, validationResult, failure);
+            }
+
             default: {
                 return this.handleCoreError(validationResult, failure);
             }

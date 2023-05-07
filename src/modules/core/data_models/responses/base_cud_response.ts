@@ -5,9 +5,10 @@ export abstract class BaseCUDResponse extends BaseResponse {
 
     declare id: number;
     declare protected static templateMessage: string;
-    declare cudResponseObjects: CUDResponseObjects
+    declare cudResponseObjects: string[]
+    declare operation: string
 
-    protected constructor(id: number, cudResponseObjects: CUDResponseObjects) {
+    protected constructor(id: number, cudResponseObjects: string[]) {
         super()
         this.id = id;
         this.cudResponseObjects = cudResponseObjects

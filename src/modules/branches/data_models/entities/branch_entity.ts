@@ -15,23 +15,23 @@ export class BranchEntity extends BaseEntity {
     declare users: UserEntity[];
     declare userIds: number[];
 
-    private constructor(id: number, name: string, createdAt: Date, updatedAt: Date, serviceProviderId: number, users: UserEntity[]) {
+    private constructor(id: number, name: string, createdAt: Date, updatedAt: Date, serviceProviderId: number, users: UserEntity[], userIds: number[]) {
         super();
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.serviceProviderId = serviceProviderId;
-        this.users = users
+        this.users = users,
+            this.userIds = userIds;
     }
 
     static buildFromModel(branch: Branch, includes: string[]): Promise<BranchEntity> {
         return new Promise(async (resolve, _) => {
             let userEntities: UserEntity[];
-            if (includes.find((include, index, arr) => include == BranchIncludes.USERS)) {
-                userEntities = await UserEntity.buildListFromModel(await branch.getUsers(), includes);   // TO DO net more includes maybe
+            if (includes.includes(BranchIncludes.USERS)) {
+                userEntities = await UserEntity.buildListFromModel(await branch.getUsers(), includes);   // TO DO add more includes maybe
             }
-
             // TO DO : add more conditions for more includes
 
             let branchEntity: BranchEntity = new BranchEntity(
@@ -40,7 +40,8 @@ export class BranchEntity extends BaseEntity {
                 branch.createdAt,
                 branch.updatedAt,
                 branch.serviceProviderId,
-                userEntities
+                userEntities,
+                null
             );
 
             resolve(branchEntity)

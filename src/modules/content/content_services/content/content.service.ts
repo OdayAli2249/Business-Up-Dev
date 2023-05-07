@@ -19,6 +19,8 @@ import { CreateProductDTO } from '../../products/data_models/dtos/create_product
 import { UpdateProductDTO } from '../../products/data_models/dtos/update_product_dto';
 import { CreateServiceDTO } from '../../services/data_models/dtos/create_service_dto';
 import { UpdateServiceDTO } from '../../services/data_models/dtos/update_service_dto';
+import { Actions } from 'src/modules/core/helpers/constants';
+import { CUDResponseObjects } from 'src/modules/core/data_models/enums/cud_response_objects';
 
 @Injectable()
 export class ContentService {
@@ -35,7 +37,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: createPostDto,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.CREATE,
+                object: CUDResponseObjects.post
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -51,7 +57,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: updatePostDto,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.UPDATE,
+                object: CUDResponseObjects.post
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -67,7 +77,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.DELETE,
+                object: CUDResponseObjects.post
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -84,7 +98,8 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<PostEntity>>;
@@ -102,7 +117,8 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<PostEntity>>;
@@ -120,7 +136,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: createProductDTO,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.CREATE,
+                object: CUDResponseObjects.product
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -137,7 +157,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: updateProductDto,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.UPDATE,
+                object: CUDResponseObjects.product
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -153,7 +177,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.DELETE,
+                object: CUDResponseObjects.product
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -170,7 +198,8 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ProductEntity>>;
@@ -188,7 +217,8 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ProductEntity>>;
@@ -205,7 +235,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: createServicetDTO,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.CREATE,
+                object: CUDResponseObjects.service
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -222,7 +256,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: updateProductDto,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.UPDATE,
+                object: CUDResponseObjects.service
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -238,7 +276,11 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {
+                action: Actions.DELETE,
+                object: CUDResponseObjects.service
+            }
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -255,7 +297,8 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ServiceEntity>>;
@@ -273,7 +316,8 @@ export class ContentService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ServiceEntity>>;

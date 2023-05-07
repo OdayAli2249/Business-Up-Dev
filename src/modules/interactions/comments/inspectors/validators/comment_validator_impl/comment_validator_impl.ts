@@ -28,7 +28,7 @@ export class CommentValidatorImpl extends CoreValidatorImpl implements CommentVa
             // the restriction may be related to prevent user from doing any action on others inteactions
             let comment = await Comment.findOne({ where: { id: param.getPathParam()['commentId'] } })
 
-            resolve(comment.userId == param.getMetaData().userId ?
+            resolve(comment && comment.userId == param.getMetaData().userId ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     CommentValidationErrors.CAN_NOT_UPDATE_COMMMENT,
@@ -42,7 +42,7 @@ export class CommentValidatorImpl extends CoreValidatorImpl implements CommentVa
             // the restriction may be related to prevent user from doing any action on others inteactions
             let comment = await Comment.findOne({ where: { id: param.getPathParam()['commentId'] } })
 
-            resolve(comment.userId == param.getMetaData().userId ?
+            resolve(comment && comment.userId == param.getMetaData().userId ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     CommentValidationErrors.CAN_NOT_DELETE_COMMENT,

@@ -69,11 +69,11 @@ class Post extends Model<InferAttributes<Post, { omit: 'comments' | 'reactions' 
     }
 
     static associate(models: Map<string, BaseModel>) {
-        Post.belongsTo(models[ModelsName.BRANCHES], { foreignKey: ForeignKeys.BRANCHE });
-        Post.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER });
-        Post.hasMany(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.POST });
-        Post.hasMany(models[ModelsName.REACTIONS], { foreignKey: ForeignKeys.POST });
-        Post.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.POST });
+        Post.belongsTo(models[ModelsName.BRANCHES], { foreignKey: ForeignKeys.BRANCHE, onDelete: 'CASCADE' });
+        Post.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        Post.hasMany(models[ModelsName.COMMENTS], { foreignKey: ForeignKeys.POST, onDelete: 'CASCADE' });
+        Post.hasMany(models[ModelsName.REACTIONS], { foreignKey: ForeignKeys.POST, onDelete: 'CASCADE' });
+        Post.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.POST, onDelete: 'CASCADE' });
     }
 }
 

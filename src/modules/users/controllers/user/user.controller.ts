@@ -31,7 +31,7 @@ export class UserController {
         });
     }
 
-    @Delete('cancel')
+    @Delete('delete')
     deleteUser()
         : Promise<BaseDeleteResponse | Failure> {
         return new Promise(async (resolve, _) => {

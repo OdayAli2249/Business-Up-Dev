@@ -28,7 +28,7 @@ export class ReactionValidatorImpl extends CoreValidatorImpl implements Reaction
             // the restriction may be related to prevent user from doing any action on others inteactions
             let reaction = await Reaction.findOne({ where: { id: param.getPathParam()['reactionId'] } })
 
-            resolve(reaction.userId == param.getMetaData().userId ?
+            resolve(reaction && reaction.userId == param.getMetaData().userId ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     ReactionValidationErrors.CAN_NOT_UPDATE_REACTION,
@@ -42,7 +42,7 @@ export class ReactionValidatorImpl extends CoreValidatorImpl implements Reaction
             // the restriction may be related to prevent user from doing any action on others inteactions
             let reaction = await Reaction.findOne({ where: { id: param.getPathParam()['reactionId'] } })
 
-            resolve(reaction.userId == param.getMetaData().userId ?
+            resolve(reaction && reaction.userId == param.getMetaData().userId ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     ReactionValidationErrors.CAN_NOT_DELETE_REACTION,

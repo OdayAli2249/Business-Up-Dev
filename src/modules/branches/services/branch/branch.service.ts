@@ -28,7 +28,8 @@ export class BranchService {
             pathParam: pathParam,
             queryParam: queryParam,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<BranchEntity>>;
@@ -44,7 +45,8 @@ export class BranchService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<UserEntity>>;
@@ -54,16 +56,15 @@ export class BranchService {
     }
 
     addNewUsersToBranch(createCustomerDto: AddNewUsersToBranchDTO,
-        serviceProviderId: number,
         branchId: number): Promise<BaseCreateResponse | Failure> {
         let pathParam = new Map<string, any>();
-        pathParam['serviceProviderId'] = serviceProviderId;
         pathParam['branchId'] = branchId;
         let param: BaseParam<any> = BaseParam.build({
             pathParam: pathParam,
             queryParam: null,
             data: createCustomerDto,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -78,7 +79,8 @@ export class BranchService {
             pathParam: null,
             queryParam: null,
             data: branchesWithUsersDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -93,7 +95,8 @@ export class BranchService {
             pathParam: null,
             queryParam: null,
             data: branchesWithUsersDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -109,7 +112,8 @@ export class BranchService {
             pathParam: pathParam,
             queryParam: null,
             data: branchesWithUsersDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;

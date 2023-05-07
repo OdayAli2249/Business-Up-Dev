@@ -17,10 +17,11 @@ export abstract class HiringRequestValidationCases {
     public static readonly IS_SENT: string = 'IS_SENT';
     public static readonly IS_PENDING: string = 'IS_PENDING';
     public static readonly NEITHER_ALREADY_ACCEPTED_NOR_REJECTED: string = 'NEITHER_ALREADY_ACCEPTED_NOR_REJECTED';
+    public static readonly NOT_ALREADY_WORK_IN_SERVICE_PROVIDER: string = 'NOT_ALREADY_WORK_IN_SERVICE_PROVIDER';
 }
 
 export abstract class HiringRequestErrorMessages {
     public static readonly CAN_NOT_APPLY_FOR_HIRING_REQUEST: string = 'you can not apply for hiring request, this may happen if you have been rejected more than once. application for this job may open later or may keep closed forever.';
     public static readonly NEITHER_REJECTED_NOR_NOT_ALREADY_CREATED: string = 'you can not send this application. you may be already hired or already have sent request.';
-    public static readonly NOT_PENDING: string = 'this request can not be canceled neither rejected inless it is pending.';
+    public static readonly NOT_PENDING: string = 'this request can not be canceled neither rejected unless it is pending.';
 }

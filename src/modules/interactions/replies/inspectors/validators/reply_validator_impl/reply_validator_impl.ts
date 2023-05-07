@@ -28,7 +28,7 @@ export class ReplyValidatorImpl extends CoreValidatorImpl implements ReplyValida
             // the restriction may be related to prevent user from doing any action on others inteactions
             let reply = await Reply.findOne({ where: { id: param.getPathParam()['replyId'] } })
 
-            resolve(reply.userId == param.getMetaData().userId ?
+            resolve(reply && reply.userId == param.getMetaData().userId ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     ReplyValidationErrors.CAN_NOT_UPDATE_REPLY,
@@ -42,7 +42,7 @@ export class ReplyValidatorImpl extends CoreValidatorImpl implements ReplyValida
             // the restriction may be related to prevent user from doing any action on others inteactions
             let reply = await Reply.findOne({ where: { id: param.getPathParam()['replyId'] } })
 
-            resolve(reply.userId == param.getMetaData().userId ?
+            resolve(reply && reply.userId == param.getMetaData().userId ?
                 ValidationResult.buildSuccess() :
                 ValidationResult.build(null,
                     ReplyValidationErrors.CAN_NOT_DELETE_REPLY,

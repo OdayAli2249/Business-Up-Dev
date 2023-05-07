@@ -15,5 +15,7 @@ export abstract class CoreValidator {
     abstract haveAccessToResource<T extends BaseDTO>(param: BaseParam<T>): Promise<ValidationResult>;
 
     abstract datasourceIsUnlocked<T extends BaseDTO>(param: BaseParam<T>): Promise<ValidationResult>;
+    
+    abstract doesUserWorkInServiceProvider<T extends BaseDTO>(param: BaseParam<T>): Promise<ValidationResult>
 
 }

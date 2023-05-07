@@ -12,6 +12,7 @@ import { Service } from 'src/data/database/models/service';
 import { Product } from 'src/data/database/models/products';
 import { PermissionGroupValidationErrors } from 'src/modules/permissions/helpers/constants';
 import { ProcessReult } from 'src/modules/core/data_models/enums/process_result';
+import { PermissionGroup } from 'src/data/database/models/permission_group';
 
 @Injectable()
 export class PermissionValidatorImpl extends CoreValidatorImpl implements PermissionValidator {
@@ -21,48 +22,62 @@ export class PermissionValidatorImpl extends CoreValidatorImpl implements Permis
     resourcesAreInTheirCorrectBranches(param: BaseParam<CreatePermissionGroupDTO | UpdatePermissionGroupDTO>): Promise<ValidationResult> {
         return new Promise(async (resolve, _) => {
             let paramData = param.getData();
+            let paramPath = param.getPathParam();
+            let branchId;
             let sneakingData = { users: [], posts: [], products: [], services: [] }
-            for (var i = 0; i < paramData.permissionGroup.users.length; i++) {
+            if (paramPath['permissionGroupId']) {
+                let permissionGroup = await PermissionGroup.findOne({
+                    where: {
+                        id:
+                            paramPath['permissionGroupId']
+                    }
+                });
+                branchId = permissionGroup.branchId;
+            } else { branchId = paramPath['branchId'] }
+            for (var i = 0; i < paramData.permissionGroup.userIds.length; i++) {
                 let res = await UserBranch.findOne({
                     where: {
                         userId: paramData.permissionGroup.userIds[i],
-                        branchId: paramData.permissionGroup.branchId
+                        branchId: branchId
                     }
                 })
                 if (!res)
                     sneakingData.users.push(paramData.permissionGroup.userIds[i])
             }
-            for (var i = 0; i < paramData.permissionGroup.postIds.length; i++) {
-                let res = await Post.findOne({
-                    where: {
-                        id: paramData.permissionGroup.postIds[i],
-                        branchId: paramData.permissionGroup.branchId
-                    }
-                })
-                if (!res)
-                    sneakingData.posts.push(paramData.permissionGroup.postIds[i])
-            }
-            for (var i = 0; i < paramData.permissionGroup.serviceIds.length; i++) {
-                let res = await Service.findOne({
-                    where: {
-                        id: paramData.permissionGroup.serviceIds[i],
-                        branchId: paramData.permissionGroup.branchId
-                    }
-                })
-                if (!res)
-                    sneakingData.services.push(paramData.permissionGroup.serviceIds[i])
-            }
-            for (var i = 0; i < paramData.permissionGroup.productIds.length; i++) {
-                let res = await Product.findOne({
-                    where:
-                    {
-                        id: paramData.permissionGroup.productIds[i],
-                        branchId: paramData.permissionGroup.branchId
-                    }
-                })
-                if (!res)
-                    sneakingData.products.push(paramData.permissionGroup.productIds[i])
-            }
+            if (paramData.permissionGroup.postIds)
+                for (var i = 0; i < paramData.permissionGroup.postIds.length; i++) {
+                    let res = await Post.findOne({
+                        where: {
+                            id: paramData.permissionGroup.postIds[i],
+                            branchId: branchId
+                        }
+                    })
+                    if (!res)
+                        sneakingData.posts.push(paramData.permissionGroup.postIds[i])
+                }
+            if (paramData.permissionGroup.serviceIds)
+                for (var i = 0; i < paramData.permissionGroup.serviceIds.length; i++) {
+                    let res = await Service.findOne({
+                        where: {
+                            id: paramData.permissionGroup.serviceIds[i],
+                            branchId: branchId
+                        }
+                    })
+                    if (!res)
+                        sneakingData.services.push(paramData.permissionGroup.serviceIds[i])
+                }
+            if (paramData.permissionGroup.productIds)
+                for (var i = 0; i < paramData.permissionGroup.productIds.length; i++) {
+                    let res = await Product.findOne({
+                        where:
+                        {
+                            id: paramData.permissionGroup.productIds[i],
+                            branchId: branchId
+                        }
+                    })
+                    if (!res)
+                        sneakingData.products.push(paramData.permissionGroup.productIds[i])
+                }
             resolve((sneakingData.users.length == 0 &&
                 sneakingData.posts.length == 0 &&
                 sneakingData.products.length == 0 &&

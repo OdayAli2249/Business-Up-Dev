@@ -198,53 +198,53 @@ class User extends Model<InferAttributes<User, { omit: 'comments' | 'orders' | '
     }
 
     static associate(models: Map<string, BaseModel>) {
-        User.belongsToMany(models[ModelsName.SERVICE_PROVIDERS], { through: models[ModelsName.SUBSCRIBTIONS], foreignKey: ForeignKeys.USER });
-        User.belongsToMany(models[ModelsName.SERVICE_PROVIDERS], { through: models[ModelsName.HIRING_REQUESTS], foreignKey: ForeignKeys.USER });
-        User.belongsToMany(models[ModelsName.SERVICE_PROVIDERS], { through: models[ModelsName.USER_SERVICE_PROVIDER_ROLES], foreignKey: ForeignKeys.USER });
-        User.belongsToMany(models[ModelsName.BRANCHES], { through: models[ModelsName.USER_BRANCHES], foreignKey: ForeignKeys.USER });
+        User.belongsToMany(models[ModelsName.SERVICE_PROVIDERS], { through: models[ModelsName.SUBSCRIBTIONS], foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        User.belongsToMany(models[ModelsName.SERVICE_PROVIDERS], { through: models[ModelsName.HIRING_REQUESTS], foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        User.belongsToMany(models[ModelsName.SERVICE_PROVIDERS], { through: models[ModelsName.USER_SERVICE_PROVIDER_ROLES], foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        User.belongsToMany(models[ModelsName.BRANCHES], { through: models[ModelsName.USER_BRANCHES], foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
         User.hasMany(models[ModelsName.POSTS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
         User.hasMany(models[ModelsName.SERVICES], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
         User.hasMany(models[ModelsName.PRODUCTS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
         User.hasMany(models[ModelsName.COMMENTS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
         User.hasMany(models[ModelsName.REACTIONS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
         User.hasMany(models[ModelsName.REPLIES], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
         User.hasMany(models[ModelsName.ORDERS], {
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.USER
-            }
+            }, onDelete: 'CASCADE'
         });
-        User.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.USER });
+        User.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
     }
 }
 

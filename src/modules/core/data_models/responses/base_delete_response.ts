@@ -4,12 +4,13 @@ import { BaseCUDResponse } from "./base_cud_response";
 
 export class BaseDeleteResponse extends BaseCUDResponse {
 
-    private constructor(id: number, cudResponseObjects: CUDResponseObjects) {
+    private constructor(id: number, cudResponseObjects: string[]) {
         super(id, cudResponseObjects);
         BaseDeleteResponse.templateMessage = CUDResponseTemplateMessages.DELETE_TEMPLATE_MESSAGE;
+        this.operation = BaseDeleteResponse.templateMessage;
     }
 
-    static build(id: number, cudResponseObjects: CUDResponseObjects): BaseDeleteResponse {
+    static build(id: number, cudResponseObjects: string[]): BaseDeleteResponse {
         return new BaseDeleteResponse(id, cudResponseObjects);
     }
 }

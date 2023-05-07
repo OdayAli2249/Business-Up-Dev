@@ -22,12 +22,19 @@ export abstract class CoreValidatorsWrapper {
 
             if (validationResults.find((v, i, _) => v.result == ProcessReult.failure))
                 reject(validationResults);
-            try {
-                result = await callBack();
-                resolve(result as R);
-            } catch (err) {
-                // resolve for database errors from basic method
-                reject([ValidationResult.buildDatabaseError()]);
+            else {
+                try {
+                    result = await callBack();
+                    resolve(result as R);
+                } catch (errors) {
+                    // the err object may be of type ValidationResult list, so we should reject it without any further
+                    // which happen in case we call data source function inside another data source function
+
+                    if (Array.isArray(errors) && errors.every(error => error instanceof ValidationResult))
+                        reject(errors)
+                    // resolve for database errors from basic method
+                    reject([ValidationResult.buildDatabaseError()]);
+                }
             }
         });
     }
@@ -61,6 +68,14 @@ export abstract class CoreValidatorsWrapper {
                     }
                     case CoreValidationCases.TIME_STAMP_AUTHORIZED: {
                         result = await this.coreValidator.timeStampAuthorized(param)
+                        resolve(result);
+                        break;
+                    }
+                    case CoreValidationCases.USER_WORKS_IN_SERVICE_PROVIDER: {
+                        result = await this.coreValidator.doesUserWorkInServiceProvider(
+                            param
+                        )
+
                         resolve(result);
                         break;
                     }

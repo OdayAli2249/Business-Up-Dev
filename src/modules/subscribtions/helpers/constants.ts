@@ -9,6 +9,8 @@ export abstract class SubscribtionValidationErrors {
 
 export abstract class SubscribtionValidationCases {
     public static readonly NOT_ALREADY_SUBSCRIBED: string = 'NOT_ALREADY_SUBSCRIBED';
+    public static readonly CAN_UPDATE_SUBSCRIBTION: string = 'CAN_UPDATE_SUBSCRIBTION';
+    public static readonly CAN_DELETE_SUBSCRIBTION: string = 'CAN_DELETE_SUBSCRIBTION';   
 }
 
 export abstract class SubscribtionErrorMessages {

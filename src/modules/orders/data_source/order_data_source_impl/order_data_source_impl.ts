@@ -28,7 +28,10 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                 try {
                     let createOrderData = param.getData();
                     createOrderData.order.userId = param.getMetaData().userId;
-                    let order = await Order.create(createOrderData.order);
+                    let order = await Order.create({
+                        name: createOrderData.order.name,
+                        userId: createOrderData.order.userId
+                    });
                     var data = [];
                     if (createOrderData.services) {
                         for (var i = 0; i < createOrderData.services.length; i++) {
@@ -49,7 +52,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                     }
                     if (data.length != 0)
                         await OrderItem.bulkCreate(data);
-                    resolve(BaseCreateResponse.build(order.id, CUDResponseObjects.order));
+                    resolve(BaseCreateResponse.build(order.id, [CUDResponseObjects.order]));
                 } catch (err) {
                     reject(err)
                 }
@@ -69,7 +72,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                     if (updateOrderData.order)
                         // problem when cloud front-end put id ...
                         // TO DO optional: in this type of queries we need to use transactions
-                        await Order.update(updateOrderData.order, {
+                        await Order.update({ name: updateOrderData.order.name }, {
                             where: {
                                 id: updateOrderPathParam['orderId']
                             }
@@ -104,7 +107,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                     }
                     if (data.length != 0)
                         await OrderItem.bulkCreate(data);
-                    resolve(BaseUpdateResponse.build(updateOrderPathParam['orderId'], CUDResponseObjects.order));
+                    resolve(BaseUpdateResponse.build(updateOrderPathParam['orderId'], [CUDResponseObjects.order]));
                 } catch (err) {
                     reject(err)
                 }
@@ -131,7 +134,7 @@ export class OrderDataSourceImpl extends CoreDataSourceImpl implements OrderData
                             orderId: deleteOrderPathParam['orderId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(deleteOrderPathParam['orderId'], CUDResponseObjects.order));
+                    resolve(BaseDeleteResponse.build(deleteOrderPathParam['orderId'], [CUDResponseObjects.order]));
                 } catch (err) {
                     reject(err)
                 }

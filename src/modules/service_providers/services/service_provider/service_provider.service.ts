@@ -24,7 +24,8 @@ export class ServiceProviderService {
             pathParam: pathParam,
             queryParam: null,
             data: createServiceProviderDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -40,7 +41,8 @@ export class ServiceProviderService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ServiceProviderEntity>>;
@@ -57,7 +59,8 @@ export class ServiceProviderService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<ServiceProviderEntity>>;
@@ -74,7 +77,8 @@ export class ServiceProviderService {
             pathParam: null,
             queryParam: queryParam,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -91,7 +95,8 @@ export class ServiceProviderService {
             pathParam: null,
             queryParam: queryParam,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -100,17 +105,20 @@ export class ServiceProviderService {
         });
     }
 
-    removeUsersFromServiceProvider(removeUsersFromServiceProviderDTO:
-        RemoveUsersFromServiceProviderDTO): Promise<BaseDeleteResponse | Failure> {
+    removeUserFromServiceProvider(removeUsersFromServiceProviderDTO:
+        RemoveUsersFromServiceProviderDTO, serviceProviderId: number): Promise<BaseDeleteResponse | Failure> {
+        let queryParam = new Map<string, any>();
+        queryParam['serviceProviderId'] = serviceProviderId;
         let param: BaseParam<any> = BaseParam.build({
             pathParam: null,
-            queryParam: null,
+            queryParam: queryParam,
             data: removeUsersFromServiceProviderDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
-            request = await this.serviceProviderRepository.removeUsersFromServiceProvider(param);
+            request = await this.serviceProviderRepository.removeUserFromServiceProvider(param);
             resolve(request.getReult() == ProcessReult.success ? request.getResponse() : request.getFailure())
         });
     }

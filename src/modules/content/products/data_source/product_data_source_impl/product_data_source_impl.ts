@@ -17,6 +17,7 @@ import { Product } from 'src/data/database/models/products';
 import { PermissionGroup } from 'src/data/database/models/permission_group';
 import { Permission } from 'src/data/database/models/permission';
 import { Op } from 'sequelize';
+import { CoreValidationCases } from 'src/modules/core/helpers/constants';
 
 @Injectable()
 export class ProductDataSourceImpl extends CoreValidatorImpl implements ProductDataSource {
@@ -29,8 +30,11 @@ export class ProductDataSourceImpl extends CoreValidatorImpl implements ProductD
                 try {
                     let createProductData = param.getData();
                     createProductData.product.branchId = param.getPathParam()['branchId'];
-                    let product = await Product.create(createProductData.product);
-                    resolve(BaseCreateResponse.build(product.id, CUDResponseObjects.product));
+                    let product = await Product.create({
+                        name: createProductData.product.name,
+                        branchId: createProductData.product.branchId
+                    });
+                    resolve(BaseCreateResponse.build(product.id, [CUDResponseObjects.product]));
                 } catch (err) {
                     reject(err)
                 }
@@ -39,18 +43,19 @@ export class ProductDataSourceImpl extends CoreValidatorImpl implements ProductD
         },
             [
                 ProductValidationCases.NO_TEMPORARY_PRODUCT_CREATE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     updateProduct(param: BaseParam<UpdateProductDTO>): Promise<BaseUpdateResponse> {
         return this.productValidatorsWrapper.validate<BaseUpdateResponse, UpdateProductDTO>(param, () => {
             return new Promise<BaseUpdateResponse>(async (resolve, reject) => {
                 try {
-                    await Product.update(param.getData().product, {
+                    await Product.update({ name: param.getData().product.name }, {
                         where: {
                             id: param.getPathParam()['productId']
                         }
                     })
-                    resolve(BaseUpdateResponse.build(0, CUDResponseObjects.product));
+                    resolve(BaseUpdateResponse.build(0, [CUDResponseObjects.product]));
                 } catch (err) {
                     reject(err)
                 }
@@ -59,6 +64,7 @@ export class ProductDataSourceImpl extends CoreValidatorImpl implements ProductD
         },
             [
                 ProductValidationCases.NO_TEMPORARY_PRODUCT_UPDATE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     deleteProduct(param: BaseParam<any>): Promise<BaseDeleteResponse> {
@@ -70,7 +76,7 @@ export class ProductDataSourceImpl extends CoreValidatorImpl implements ProductD
                             id: param.getPathParam()['productId']
                         }
                     })
-                    resolve(BaseDeleteResponse.build(product, CUDResponseObjects.comment));
+                    resolve(BaseDeleteResponse.build(product, [CUDResponseObjects.product]));
                 } catch (err) {
                     reject(err)
                 }
@@ -79,6 +85,7 @@ export class ProductDataSourceImpl extends CoreValidatorImpl implements ProductD
         },
             [
                 ProductValidationCases.NO_TEMPORARY_PRODUCT_DELETE_DENY,
+                CoreValidationCases.CAN_DO_THIS_ACTION
             ])
     }
     getProducts(param: BaseParam<any>): Promise<BaseReadResponse<ProductEntity>> {

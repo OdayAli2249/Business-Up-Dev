@@ -26,7 +26,8 @@ export class SubscribtionService {
             pathParam: pathParam,
             queryParam: null,
             data: createSubscribtionDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseCreateResponse>;
@@ -43,7 +44,8 @@ export class SubscribtionService {
             pathParam: pathParam,
             queryParam: null,
             data: updateSubscribtionDTO,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseUpdateResponse>;
@@ -59,7 +61,8 @@ export class SubscribtionService {
             pathParam: pathParam,
             queryParam: null,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseDeleteResponse>;
@@ -77,7 +80,8 @@ export class SubscribtionService {
             pathParam: null,
             queryParam: queryParam,
             data: null,
-            metaData: null
+            // metaData: null,
+            obj: {}
         });
         return new Promise(async (resolve, _) => {
             let request: FailureOr<BaseReadResponse<SubscribtionEntity>>;

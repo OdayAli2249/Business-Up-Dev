@@ -15,12 +15,15 @@ export abstract class UserRoleIncludes {
 
 export abstract class UserValidationErrors {
     public static readonly UPDATE_PROFILE_TIME_STAMP_NOT_AUTHORIZED: string = 'UPDATE_PROFILE_TIME_STAMP_NOT_AUTHORIZED';
+    public static readonly CAN_NOT_DELETE_USER: string = 'CAN_NOT_DELETE_USER';
 }
 
 export abstract class UserValidationCases {
     public static readonly UPDATE_PROFILE_TIME_STAMP_AUTHORIZED: string = 'UPDATE_PROFILE_TIME_STAMP_AUTHORIZED';
+    public static readonly CAN_DELETE_USER: string = 'CAN_DELETE_USER';
 }
 
 export abstract class UserErrorMesssages {
     public static readonly UPDATE_PROFILE_TIME_STAMP_NOT_AUTHORIZED: string = 'you can not update some of your profile data until you pass certain amount of time from the last update.';
+    public static readonly CAN_NOT_DELETE_USER: string = 'you can not delete your profile! this is because you are the only master user on one of your service providers.';
 }

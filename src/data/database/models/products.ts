@@ -53,10 +53,10 @@ class Product extends Model<InferAttributes<Product, { omit: 'orderItems' }>, In
     }
 
     static associate(models: Map<string, BaseModel>) {
-        Product.belongsTo(models[ModelsName.BRANCHES], { foreignKey: ForeignKeys.BRANCHE });
-        Product.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER });
-        Product.hasMany(models[ModelsName.ORDER_ITEMS], { foreignKey: ForeignKeys.PRODUCT });
-        Product.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.PRODUCT });
+        Product.belongsTo(models[ModelsName.BRANCHES], { foreignKey: ForeignKeys.BRANCHE, onDelete: 'CASCADE' });
+        Product.belongsTo(models[ModelsName.USERS], { foreignKey: ForeignKeys.USER, onDelete: 'CASCADE' });
+        Product.hasMany(models[ModelsName.ORDER_ITEMS], { foreignKey: ForeignKeys.PRODUCT, onDelete: 'CASCADE' });
+        Product.hasMany(models[ModelsName.PERMISSIONS], { foreignKey: ForeignKeys.PRODUCT, onDelete: 'CASCADE' });
     }
 }
 

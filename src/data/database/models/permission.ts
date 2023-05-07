@@ -50,25 +50,25 @@ class Permission extends Model<InferAttributes<Permission>, InferCreationAttribu
 
     static associate(models: Map<string, BaseModel>) {
         Permission.belongsTo(models[ModelsName.PERMISSION_GROUPS], {
-            foreignKey: ForeignKeys.PERMISSION_GROUP
-
+            foreignKey: ForeignKeys.PERMISSION_GROUP,
+            onDelete: 'CASCADE'
         });
 
         Permission.belongsTo(models[ModelsName.POSTS], {
-            foreignKey: ForeignKeys.POST
-
+            foreignKey: ForeignKeys.POST,
+            onDelete: 'CASCADE'
         });
         Permission.belongsTo(models[ModelsName.SERVICES], {
-            foreignKey: ForeignKeys.SERVICE
-
+            foreignKey: ForeignKeys.SERVICE,
+            onDelete: 'CASCADE'
         });
         Permission.belongsTo(models[ModelsName.PRODUCTS], {
-            foreignKey: ForeignKeys.PRODUCT
-
+            foreignKey: ForeignKeys.PRODUCT,
+            onDelete: 'CASCADE'
         });
         Permission.belongsTo(models[ModelsName.USERS], {
-            foreignKey: ForeignKeys.USER
-
+            foreignKey: ForeignKeys.USER,
+            onDelete: 'CASCADE'
         });
     }
 }

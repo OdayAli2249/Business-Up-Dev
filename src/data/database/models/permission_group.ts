@@ -39,11 +39,12 @@ class PermissionGroup extends Model<InferAttributes<PermissionGroup>, InferCreat
             foreignKey: {
                 allowNull: false,
                 name: ForeignKeys.PERMISSION_GROUP
-            }
+            },
+            onDelete: 'CASCADE'
         });
         PermissionGroup.belongsTo(models[ModelsName.BRANCHES], {
-            foreignKey: ForeignKeys.BRANCHE
-
+            foreignKey: ForeignKeys.BRANCHE,
+            onDelete: 'CASCADE'
         });
     }
 }
